@@ -1,65 +1,69 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import styles from "../styles/Home.module.css";
+import Typed from "react-typed";
+import { RiLinkedinFill, RiGithubFill } from "react-icons/ri";
+import { useState } from "react";
+import { DefaultSeo } from "next-seo";
 
 export default function Home() {
+  const [isComplete, setIsComplete] = useState(false);
+
   return (
     <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <DefaultSeo
+        title="Irham Putra Prasetyo"
+        description="Irham Putra Prasetyo Website"
+      />
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+      <Typed
+        className={styles.title}
+        smartBackspace
+        showCursor
+        strings={[
+          "Hi! I'm Irham Putra Prasetyo and I come from Indonesia. <br/> I currently work as Senior Software Engineer and <br/> Software Architect in Germany. <br/> My current tech stacks are React + TypeScript, <br/> Node.js, Vue.js and Rust. <br/> Thank you and stay healthy. Tschüß!",
+        ]}
+        typeSpeed={70}
+        backSpeed={68}
+        onComplete={() => {
+          setInterval(() => {
+            setIsComplete(true);
+          }, 1200);
+        }}
+      />
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
+      <div style={{ display: "flex", justifyContent: "end", margin: 20 }}>
+        {isComplete ? (
+          <>
+            <a
+              href="https://www.linkedin.com/in/muhamad-irham-prasetyo/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <RiLinkedinFill size={30} color="#0e76a8" />
+            </a>
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+            <a
+              href="https://github.com/irhamputra"
+              target="_blank"
+              style={{ marginLeft: 10 }}
+              rel="noopener noreferrer"
+            >
+              <RiGithubFill size={30} color="black" />
+            </a>
+          </>
+        ) : (
+          <p />
+        )}
+      </div>
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
+      <div className={styles.logo}>
+        <img src="/me.png" width={280} alt="Vercel Logo" />
+      </div>
     </div>
-  )
+  );
 }
+
+export const getServerSideProps = () => {
+  return {
+    props: {},
+  };
+};
