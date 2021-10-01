@@ -19,7 +19,28 @@ export default function Home() {
     <>
       <DefaultSeo
         title="Irham Putra Prasetyo"
-        description="Irham Putra Prasetyo Website"
+        description="Get to know me first by looking this site with Stories"
+        twitter={{
+          handle: "@IRHMPTRA",
+          site: "@IRHMPTRA",
+          cardType: "summary_large_image",
+        }}
+        openGraph={{
+          site_name: "Irham Putra Prasetyo",
+          url: "https://irhamputra.com",
+          title: "Irham Putra Prasetyo",
+          description:
+            "Get to know me first by looking my Instagram Stories look like",
+          images: [
+            {
+              url:
+                "https://irhamputra.com/_next/image?url=%2Fme.png&w=256&q=75",
+              width: 800,
+              height: 600,
+              alt: "Irham Putra",
+            },
+          ],
+        }}
       />
 
       <Flex alignItems="center" justify="center" minH="100%">
