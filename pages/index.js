@@ -27,7 +27,7 @@ export default function Home() {
           images: [
             {
               url:
-                "https://irhamputra.com/_next/image?url=%2Fme.png&w=256&q=75",
+                "https://irhamputra.com/_next/image?url=%2Firhamputra.jpg&w=256&q=75",
               width: 800,
               height: 600,
               alt: "Irham Putra",
