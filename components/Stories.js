@@ -9,8 +9,6 @@ import {
   ModalContent,
   ModalOverlay,
   Text,
-  CloseButton,
-  Spacer,
 } from "@chakra-ui/react";
 import Stories, { WithSeeMore } from "react-insta-stories";
 
@@ -34,7 +32,7 @@ const Username = () => (
 
 const stories = [
   {
-    content: ({ action, isPaused }) => {
+    content: () => {
       return (
         <Box sx={contentStyle}>
           <Username />
@@ -104,15 +102,38 @@ const stories = [
     seeMore: () => <div />,
   },
   {
-    content: () => {
+    seeMore: () => <div />,
+    content: ({ action, story }) => {
       return (
-        <Box sx={contentStyle}>
-          <Username />
-          <Box padding={10} mt={70}>
-            <Heading>Thank you for seeing my Stories! 🎉</Heading>
-            <Heading>You can catch me in Twitter @IRHMPTRA</Heading>
+        <WithSeeMore
+          action={action}
+          story={story}
+          customCollapsed={() => {
+            return (
+              <Text
+                cursor="pointer"
+                textAlign="center"
+                py={5}
+                onClick={() => {
+                  action("pause");
+                  window.location.href = "mailto:irhamputraprasetyo@gmail.com";
+                }}
+              >
+                Send me an Email 📧
+              </Text>
+            );
+          }}
+        >
+          <Box sx={contentStyle}>
+            <Username />
+            <Box padding={10} mt={70}>
+              <Heading>Thank you for seeing my Stories! 🎉</Heading>
+              <Heading>You can catch me in Twitter @IRHMPTRA or</Heading>
+              <br />
+              <Heading textAlign="center">⬇️</Heading>
+            </Box>
           </Box>
-        </Box>
+        </WithSeeMore>
       );
     },
   },

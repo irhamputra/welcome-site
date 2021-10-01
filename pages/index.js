@@ -1,15 +1,8 @@
 import { DefaultSeo } from "next-seo";
 import Image from "next/image";
-import { Box, Button, Flex, Text } from "@chakra-ui/react";
-import Stories from "react-insta-stories";
+import { Box, Button, Flex } from "@chakra-ui/react";
 
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  useDisclosure,
-  ModalBody,
-} from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import Story from "../components/Stories";
 
 export default function Home() {
