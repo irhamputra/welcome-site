@@ -1,12 +1,18 @@
+import * as React from "react";
 import { DefaultSeo } from "next-seo";
 import Image from "next/image";
-import { Box, Button, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
-import { useDisclosure } from "@chakra-ui/react";
-import Story from "../components/Stories";
+const links = [
+  "https://github.com/irhamputra",
+  "https://twitter.com/irhmptra",
+  "https://www.linkedin.com/in/muhamad-irham-prasetyo/",
+];
 
 export default function Home() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const handleOpenLink = React.useCallback(() => {
+    window.open(links[Math.floor(Math.random() * links.length)], "_blank");
+  }, []);
 
   return (
     <>
@@ -36,18 +42,15 @@ export default function Home() {
         }}
       />
 
-      <Flex alignItems="center" justify="center" minH="100%">
-        <Box>
-          <Image src="/me.png" width={250} height={250} alt="pic" />
-          <Flex justify="center">
-            <Button onClick={onOpen} variant="outline">
-              Get to know me 🤔
-            </Button>
-          </Flex>
-        </Box>
+      <Flex justifyItems="center" justifyContent="center" minH="100%">
+        <Image
+          onClick={handleOpenLink}
+          src="/me-computer.svg"
+          width={700}
+          height={700}
+          alt="pic"
+        />
       </Flex>
-
-      <Story onClose={onClose} isOpen={isOpen} />
     </>
   );
 }
