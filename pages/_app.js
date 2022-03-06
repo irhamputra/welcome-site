@@ -1,9 +1,17 @@
+import "react-calendar/dist/Calendar.css";
+import "animate.css/animate.min.css";
 import "../styles/globals.css";
 import { DefaultSeo } from "next-seo";
 
 function MyApp({ Component, pageProps }) {
   return (
-    <>
+    <div
+      className={
+        process.env.NODE_ENV === "development"
+          ? "debug-screens h-full"
+          : "h-full"
+      }
+    >
       <DefaultSeo
         title="Irham Putra Prasetyo"
         description="Get to know me first by looking this site with Stories"
@@ -29,7 +37,7 @@ function MyApp({ Component, pageProps }) {
         }}
       />
       <Component {...pageProps} />
-    </>
+    </div>
   );
 }
 
