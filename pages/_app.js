@@ -1,7 +1,8 @@
-import "react-calendar/dist/Calendar.css";
-import "animate.css/animate.min.css";
 import "../styles/globals.css";
-import { DefaultSeo } from "next-seo";
+import { QueryClientProvider, QueryClient } from "react-query";
+import SEO from "../components/SEO";
+
+const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -12,31 +13,10 @@ function MyApp({ Component, pageProps }) {
           : "h-full"
       }
     >
-      <DefaultSeo
-        title="Irham Putra Prasetyo"
-        description="Get to know me first by looking this site with Stories"
-        twitter={{
-          handle: "@IRHMPTRA",
-          site: "@IRHMPTRA",
-          cardType: "summary_large_image",
-        }}
-        openGraph={{
-          site_name: "Irham Putra Prasetyo",
-          url: "https://irhamputra.com",
-          title: "Irham Putra Prasetyo",
-          description:
-            "Hi! My name is Irham Putra Prasetyo. Welcome to the my personal website!",
-          images: [
-            {
-              url: "https://irhamputra.com/_next/image?url=%2Fme-computer.svg&w=750&q=75",
-              width: 800,
-              height: 600,
-              alt: "Irham Putra",
-            },
-          ],
-        }}
-      />
-      <Component {...pageProps} />
+      <QueryClientProvider client={queryClient}>
+        <SEO />
+        <Component {...pageProps} />
+      </QueryClientProvider>
     </div>
   );
 }
