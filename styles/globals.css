@@ -10,6 +10,5 @@ body,
 
 @layer base {
   body {
-    @apply bg-gradient-to-tl from-gray-700 via-gray-900 to-black
   }
 }
