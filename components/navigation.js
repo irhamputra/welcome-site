@@ -3,7 +3,6 @@ import { FaTwitter } from "react-icons/fa";
 
 const Navigation = () => {
   const user = useUserContext();
-  console.log(user);
 
   return (
     <div className="mr-6 md:w-[15%] text-center w-[40%]">

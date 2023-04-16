@@ -83,7 +83,6 @@ export const getServerSideProps = async (ctx) => {
       },
     };
   } catch (e) {
-    console.error(e);
     return {
       props: {
         user: {},
