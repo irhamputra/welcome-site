@@ -6,11 +6,13 @@ const Navigation = () => {
 
   return (
     <div className="mr-6 md:w-[15%] text-center w-[40%]">
-      <img
-        className="w-50 h-50 rounded-full"
-        src={user.avatar_url}
-        alt="Rounded avatar"
-      />
+      {user.avatar_url && (
+        <img
+          className="w-50 h-50 rounded-full"
+          src={user.avatar_url}
+          alt="Rounded avatar"
+        />
+      )}
 
       <div className="font-bold">
         <h1 className="prose text-2xl">{user.login}</h1>
