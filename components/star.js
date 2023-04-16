@@ -1,9 +1,10 @@
 const Star = ({ count }) => {
   return (
     <div className="flex items-center">
-      {Array.from({ length: count }).map(() => {
+      {Array.from({ length: count }).map((_, index) => {
         return (
           <svg
+            key={index + 1}
             aria-hidden="true"
             className="w-5 h-5 text-yellow-400"
             fill="currentColor"

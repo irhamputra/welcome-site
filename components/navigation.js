@@ -6,19 +6,25 @@ const Navigation = () => {
 
   return (
     <div className="mr-6 md:w-[15%] text-center w-[40%]">
+      <img
+        className="w-50 h-50 rounded-full"
+        src={user?.avatar_url}
+        alt="Rounded avatar"
+      />
+
       <div className="font-bold">
-        <h1 className="prose text-2xl">{user.login}</h1>
+        <h1 className="prose text-2xl">{user?.login}</h1>
       </div>
-      <p>📍 {user.location}</p>
+      <p>📍 {user?.location}</p>
       <div className="flex items-center justify-center">
         <FaTwitter />{" "}
         <a
           className="underline text-blue-400"
-          href={`https://twitter.com/${user.twitter_username}`}
+          href={`https://twitter.com/${user?.twitter_username}`}
           target="_blank"
         >
           {" "}
-          @{user.twitter_username}
+          @{user?.twitter_username}
         </a>
       </div>
     </div>
