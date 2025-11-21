@@ -1,22 +1,18 @@
-import "../styles/globals.css";
-import { QueryClientProvider, QueryClient } from "react-query";
-import Navigation from "../components/navigation";
-import Layout from "../components/layout";
-import UserProvider from "../context/user";
-
-const queryClient = new QueryClient();
-
-function MyApp({ Component, pageProps }) {
+function MyApp() {
   return (
-    <div className="debug-screens">
-      <UserProvider value={pageProps.user}>
-        <QueryClientProvider client={queryClient}>
-          <Layout>
-            <Navigation />
-            <Component {...pageProps} />
-          </Layout>
-        </QueryClientProvider>
-      </UserProvider>
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      <div>
+        <h1>Welcome to my personal page</h1>
+        <div style={{ textAlign: "center" }}>
+          <div>Hi! I'm Irham and I'm a software engineer based in Germany</div>
+          <a
+            href="https://www.linkedin.com/in/muhamad-irham-prasetyo/"
+            target="_blank"
+          >
+            LinkedIn
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
