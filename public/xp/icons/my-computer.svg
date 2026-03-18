@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- Monitor body -->
+  <rect x="4" y="4" width="40" height="30" rx="2" fill="#c0c0c0" stroke="#333" stroke-width="1.5"/>
+  <!-- Screen bezel -->
+  <rect x="7" y="7" width="34" height="24" rx="1" fill="#1a1a2e"/>
+  <!-- Screen content -->
+  <rect x="8" y="8" width="32" height="22" fill="#3a7bd5"/>
+  <!-- Screen shine -->
+  <rect x="8" y="8" width="32" height="6" fill="rgba(255,255,255,0.1)" rx="0"/>
+  <!-- Power LED -->
+  <circle cx="24" cy="33" r="1.5" fill="#4CAF50"/>
+  <!-- Stand -->
+  <rect x="18" y="35" width="12" height="4" fill="#aaa" stroke="#333" stroke-width="0.5"/>
+  <!-- Base -->
+  <rect x="14" y="39" width="20" height="3" rx="1" fill="#999" stroke="#333" stroke-width="0.5"/>
+</svg>

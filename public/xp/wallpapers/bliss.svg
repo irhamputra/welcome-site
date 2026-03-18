@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1200" width="1920" height="1200">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="0.5">
+      <stop offset="0%" stop-color="#4a90d9"/>
+      <stop offset="40%" stop-color="#87CEEB"/>
+      <stop offset="70%" stop-color="#b8dff5"/>
+      <stop offset="100%" stop-color="#d4edfc"/>
+    </linearGradient>
+    <linearGradient id="grass" x1="0" y1="0.5" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5cb85c"/>
+      <stop offset="30%" stop-color="#4cae4c"/>
+      <stop offset="60%" stop-color="#3d9b3d"/>
+      <stop offset="100%" stop-color="#357a35"/>
+    </linearGradient>
+  </defs>
+  <!-- Sky -->
+  <rect width="1920" height="1200" fill="url(#sky)"/>
+  <!-- Clouds -->
+  <g fill="white" opacity="0.8">
+    <ellipse cx="300" cy="200" rx="120" ry="50"/>
+    <ellipse cx="380" cy="190" rx="80" ry="40"/>
+    <ellipse cx="250" cy="195" rx="70" ry="35"/>
+    <ellipse cx="900" cy="150" rx="140" ry="55"/>
+    <ellipse cx="1000" cy="140" rx="90" ry="45"/>
+    <ellipse cx="840" cy="145" rx="80" ry="40"/>
+    <ellipse cx="1500" cy="250" rx="100" ry="45"/>
+    <ellipse cx="1570" cy="240" rx="75" ry="38"/>
+    <ellipse cx="1450" cy="245" rx="65" ry="32"/>
+  </g>
+  <!-- Rolling hills -->
+  <path d="M0 650 Q200 550 500 620 Q800 700 1000 600 Q1200 500 1500 580 Q1700 640 1920 590 L1920 1200 L0 1200 Z" fill="#6abf69"/>
+  <path d="M0 700 Q300 630 600 680 Q900 730 1100 660 Q1400 590 1700 650 Q1850 680 1920 660 L1920 1200 L0 1200 Z" fill="#5cb85c"/>
+  <path d="M0 780 Q250 720 500 760 Q750 800 1000 740 Q1300 680 1600 730 Q1800 760 1920 740 L1920 1200 L0 1200 Z" fill="#4cae4c"/>
+  <path d="M0 850 Q400 800 800 830 Q1200 860 1600 820 Q1800 810 1920 830 L1920 1200 L0 1200 Z" fill="#3d9b3d"/>
+</svg>

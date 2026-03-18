@@ -1,20 +1,18 @@
-function MyApp() {
+import "xp.css/dist/XP.css";
+import "../styles/globals.css";
+import Head from "next/head";
+import { WindowManagerProvider } from "../context/windowManager";
+
+export default function MyApp({ Component, pageProps }) {
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      <div>
-        <h1>Welcome to my personal page</h1>
-        <div style={{ textAlign: "center" }}>
-          <div>Hi! I'm Irham and I'm a software engineer based in Germany</div>
-          <a
-            href="https://www.linkedin.com/in/muhamad-irham-prasetyo/"
-            target="_blank"
-          >
-            LinkedIn
-          </a>
-        </div>
-      </div>
-    </div>
+    <WindowManagerProvider>
+      <Head>
+        <title>Irham Putra | Windows XP</title>
+        <meta name="description" content="Irham Putra - Software Engineer - Personal Portfolio (Windows XP Edition)" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <Component {...pageProps} />
+    </WindowManagerProvider>
   );
 }
-
-export default MyApp;

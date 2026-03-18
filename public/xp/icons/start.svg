@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <!-- Windows XP logo approximation -->
+  <g transform="translate(2,2)">
+    <!-- Red quadrant -->
+    <path d="M0 0 L8.5 0 L8.5 8.5 L0 8.5 Z" fill="#f44336" transform="rotate(-5, 4.25, 4.25)"/>
+    <!-- Green quadrant -->
+    <path d="M11.5 0 L20 0 L20 8.5 L11.5 8.5 Z" fill="#4CAF50" transform="rotate(5, 15.75, 4.25)"/>
+    <!-- Blue quadrant -->
+    <path d="M0 11.5 L8.5 11.5 L8.5 20 L0 20 Z" fill="#2196F3" transform="rotate(5, 4.25, 15.75)"/>
+    <!-- Yellow quadrant -->
+    <path d="M11.5 11.5 L20 11.5 L20 20 L11.5 20 Z" fill="#FFC107" transform="rotate(-5, 15.75, 15.75)"/>
+  </g>
+</svg>
