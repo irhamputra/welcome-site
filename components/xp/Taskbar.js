@@ -48,6 +48,10 @@ export default function Taskbar() {
     ie: "/xp/icons/Windows XP Icons/Internet Explorer 6.png",
     outlook: "/xp/icons/Windows XP Icons/Outlook Express.png",
     paint: "/xp/icons/Windows XP Icons/Paint.png",
+    notepad: "/xp/icons/Windows XP Icons/Notepad.png",
+    wordpad: "/xp/icons/Windows XP Icons/Wordpad.png",
+    calculator: "/xp/icons/Windows XP Icons/Calculator.png",
+    run: "/xp/icons/Windows XP Icons/Run.png",
   };
 
   const openWindows = windowOrder

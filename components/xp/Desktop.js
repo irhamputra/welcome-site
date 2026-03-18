@@ -10,6 +10,10 @@ import RecycleBinWindow from "./windows/RecycleBinWindow";
 import InternetExplorerWindow from "./windows/InternetExplorerWindow";
 import OutlookExpressWindow from "./windows/OutlookExpressWindow";
 import PaintWindow from "./windows/PaintWindow";
+import NotepadWindow from "./windows/NotepadWindow";
+import WordPadWindow from "./windows/WordPadWindow";
+import CalculatorWindow from "./windows/CalculatorWindow";
+import RunWindow from "./windows/RunWindow";
 
 const DESKTOP_ICONS = [
   { id: "mycomputer", icon: "/xp/icons/Windows XP Icons/My Computer.png", label: "My Computer" },
@@ -66,6 +70,18 @@ export default function Desktop({ user, repos }) {
       </Window>
       <Window id="paint">
         <PaintWindow />
+      </Window>
+      <Window id="notepad">
+        <NotepadWindow />
+      </Window>
+      <Window id="wordpad">
+        <WordPadWindow />
+      </Window>
+      <Window id="calculator">
+        <CalculatorWindow />
+      </Window>
+      <Window id="run">
+        <RunWindow />
       </Window>
 
       {/* Start Menu */}

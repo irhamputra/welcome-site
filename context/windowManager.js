@@ -10,6 +10,10 @@ const WINDOW_CONFIGS = {
   ie: { title: "Muhamad Irham Prasetyo - LinkedIn - Microsoft Internet Explorer", defaultWidth: 800, defaultHeight: 560 },
   outlook: { title: "Inbox - Outlook Express", defaultWidth: 750, defaultHeight: 530 },
   paint: { title: "Untitled - Paint", defaultWidth: 820, defaultHeight: 580 },
+  notepad: { title: "Untitled - Notepad", defaultWidth: 560, defaultHeight: 400 },
+  wordpad: { title: "Document - WordPad", defaultWidth: 680, defaultHeight: 500 },
+  calculator: { title: "Calculator", defaultWidth: 220, defaultHeight: 280 },
+  run: { title: "Run", defaultWidth: 400, defaultHeight: 210 },
 };
 
 function getDefaultPosition(id, index) {
