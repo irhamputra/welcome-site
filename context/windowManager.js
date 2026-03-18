@@ -9,6 +9,7 @@ const WINDOW_CONFIGS = {
   recyclebin: { title: "Recycle Bin", defaultWidth: 500, defaultHeight: 350 },
   ie: { title: "Muhamad Irham Prasetyo - LinkedIn - Microsoft Internet Explorer", defaultWidth: 800, defaultHeight: 560 },
   outlook: { title: "Inbox - Outlook Express", defaultWidth: 750, defaultHeight: 530 },
+  paint: { title: "Untitled - Paint", defaultWidth: 820, defaultHeight: 580 },
 };
 
 function getDefaultPosition(id, index) {

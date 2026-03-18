@@ -9,6 +9,7 @@ import MyComputerWindow from "./windows/MyComputerWindow";
 import RecycleBinWindow from "./windows/RecycleBinWindow";
 import InternetExplorerWindow from "./windows/InternetExplorerWindow";
 import OutlookExpressWindow from "./windows/OutlookExpressWindow";
+import PaintWindow from "./windows/PaintWindow";
 
 const DESKTOP_ICONS = [
   { id: "mycomputer", icon: "/xp/icons/Windows XP Icons/My Computer.png", label: "My Computer" },
@@ -16,6 +17,7 @@ const DESKTOP_ICONS = [
   { id: "recyclebin", icon: "/xp/icons/Windows XP Icons/Recycle Bin (empty).png", label: "Recycle Bin" },
   { id: "ie", icon: "/xp/icons/Windows XP Icons/Internet Explorer 6.png", label: "Internet Explorer" },
   { id: "outlook", icon: "/xp/icons/Windows XP Icons/Outlook Express.png", label: "Outlook Express" },
+  { id: "paint", icon: "/xp/icons/Windows XP Icons/Paint.png", label: "Paint" },
 ];
 
 export default function Desktop({ user, repos }) {
@@ -61,6 +63,9 @@ export default function Desktop({ user, repos }) {
       </Window>
       <Window id="outlook">
         <OutlookExpressWindow />
+      </Window>
+      <Window id="paint">
+        <PaintWindow />
       </Window>
 
       {/* Start Menu */}

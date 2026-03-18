@@ -47,6 +47,7 @@ export default function Taskbar() {
     recyclebin: "/xp/icons/Windows XP Icons/Recycle Bin (empty).png",
     ie: "/xp/icons/Windows XP Icons/Internet Explorer 6.png",
     outlook: "/xp/icons/Windows XP Icons/Outlook Express.png",
+    paint: "/xp/icons/Windows XP Icons/Paint.png",
   };
 
   const openWindows = windowOrder
