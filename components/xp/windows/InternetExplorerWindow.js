@@ -4,9 +4,9 @@ const GITHUB_URL = "https://github.com/irhamputra";
 const LINKEDIN_URL = "https://www.linkedin.com/in/muhamad-irham-prasetyo/";
 
 export default function InternetExplorerWindow({ user }) {
-  const [address, setAddress] = useState(GITHUB_URL);
-  const [inputAddress, setInputAddress] = useState(GITHUB_URL);
-  const [history, setHistory] = useState([GITHUB_URL]);
+  const [address, setAddress] = useState(LINKEDIN_URL);
+  const [inputAddress, setInputAddress] = useState(LINKEDIN_URL);
+  const [history, setHistory] = useState([LINKEDIN_URL]);
   const [historyIndex, setHistoryIndex] = useState(0);
   const [activeMenu, setActiveMenu] = useState(null);
 
@@ -232,9 +232,59 @@ function GitHubPage({ user, onNavigate, linkedinUrl }) {
 }
 
 /* ─── LinkedIn Profile Page ───────────────────────────────────────────── */
+const EXPERIENCE = [
+  {
+    title: "Senior Software Engineer",
+    company: "GET AG",
+    period: "Jan 2020 – Present · 6 yrs 3 mos",
+    location: "Leipzig Area, Germany",
+    desc: "Design, develop, and install software solutions across the full development lifecycle. Provide technical guidance and coaching to developers. Create comprehensive documentation including flowcharts, diagrams, and code comments.",
+  },
+  {
+    title: "Software Developer",
+    company: "FUTURE.rent",
+    period: "Jun 2019 – Dec 2019 · 7 mos",
+    location: "Leipzig Area, Germany",
+    desc: "",
+  },
+  {
+    title: "Frontend Developer",
+    company: "ener|xess GmbH",
+    period: "Jun 2018 – Jun 2019 · 1 yr 1 mo",
+    location: "Leipzig Area, Germany",
+    desc: "",
+  },
+  {
+    title: "Frontend Developer",
+    company: "WWU Medien GmbH",
+    period: "Apr 2018 – Jun 2018 · 3 mos",
+    location: "Leipzig Area, Germany",
+    desc: "",
+  },
+  {
+    title: "Software Developer",
+    company: "Radio PPI Dunia",
+    period: "2015 – 2017 · 2 yrs",
+    location: "Remote",
+    desc: "",
+  },
+];
+
+const SKILLS = ["TypeScript", "Node.js", "Rust", "React.js", "Next.js", "Angular", "Software Architecture", "VueJS", "GraphQL", "Docker"];
+
+const CERTIFICATIONS = [
+  "Ultimate Rust Crash Course",
+  "Advanced React and GraphQL",
+  "React Web Developer (with Redux)",
+];
+
+const SUMMARY = `As a Senior Software Engineer and Software Architect at GET AG, I collaborate with other professionals to design, develop, and integrate software solutions for various projects. I also lead and mentor the development team, ensuring that they follow the best practices and standards, and communicate effectively with the stakeholders. Some of the technologies I use are TypeScript, Node.js, and Rust.
+
+I have a diploma in web design and development from SAE Institute Leipzig, where I learned the fundamentals of HTML, CSS, and JavaScript, as well as various front-end frameworks and tools, such as React, Next.js, VueJS, and QuasarJS. I am passionate about building things with React, TypeScript, and Rust, and I contribute to open source projects and web development communities.`;
+
 function LinkedInPage({ user, onNavigate, githubUrl }) {
   return (
-    <div style={{ fontFamily: "'-apple-system', Arial, sans-serif", fontSize: "14px", background: "#f3f2ef", minHeight: "100%" }}>
+    <div style={{ fontFamily: "Arial, sans-serif", fontSize: "14px", background: "#f3f2ef", minHeight: "100%" }}>
 
       {/* LinkedIn nav */}
       <div style={{ background: "white", borderBottom: "1px solid #e0e0e0", padding: "0 24px", display: "flex", alignItems: "center", gap: "20px", height: 52, position: "sticky", top: 0, zIndex: 10 }}>
@@ -257,56 +307,55 @@ function LinkedInPage({ user, onNavigate, githubUrl }) {
 
       <div style={{ maxWidth: 860, margin: "16px auto", padding: "0 16px", display: "flex", gap: "16px" }}>
         {/* Main card */}
-        <div style={{ flex: 1 }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          {/* Profile card */}
           <div style={{ background: "white", borderRadius: 8, border: "1px solid #e0e0e0", overflow: "hidden", marginBottom: 12 }}>
-            {/* Cover */}
-            <div style={{ height: 130, background: "linear-gradient(135deg, #0077b5 0%, #00a0dc 50%, #0055a5 100%)" }} />
-            {/* Avatar + info */}
+            <div style={{ height: 120, background: "linear-gradient(135deg, #0077b5 0%, #00a0dc 50%, #0055a5 100%)" }} />
             <div style={{ padding: "0 24px 16px", position: "relative" }}>
-              <div style={{ marginTop: -48 }}>
+              <div style={{ marginTop: -44 }}>
                 <img
                   src={user?.avatar_url}
-                  alt={user?.name}
-                  style={{ width: 96, height: 96, borderRadius: "50%", border: "3px solid white", display: "block", background: "white" }}
+                  alt="Muhamad Irham Prasetyo"
+                  style={{ width: 88, height: 88, borderRadius: "50%", border: "3px solid white", display: "block", background: "white" }}
                 />
               </div>
               <div style={{ position: "absolute", top: 16, right: 24, display: "flex", gap: 8 }}>
-                <button style={{ background: "white", color: "#0a66c2", border: "1px solid #0a66c2", borderRadius: 16, padding: "6px 16px", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}>Message</button>
-                <button style={{ background: "#0a66c2", color: "white", border: "none", borderRadius: 16, padding: "6px 16px", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}>Connect</button>
+                <button style={{ background: "white", color: "#0a66c2", border: "1px solid #0a66c2", borderRadius: 16, padding: "5px 16px", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}>Message</button>
+                <button style={{ background: "#0a66c2", color: "white", border: "none", borderRadius: 16, padding: "5px 16px", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}>Connect</button>
               </div>
               <div style={{ marginTop: 8 }}>
-                <div style={{ fontSize: "20px", fontWeight: 600, color: "#191919" }}>{user?.name || "Muhamad Irham Prasetyo"}</div>
-                <div style={{ fontSize: "14px", color: "#191919", margin: "4px 0" }}>Software Engineer</div>
-                <div style={{ fontSize: "13px", color: "#666", marginBottom: 4 }}>{user?.location || "Germany"} ·
-                  <a href={LINKEDIN_URL} target="_blank" rel="noreferrer" style={{ color: "#0a66c2", marginLeft: 4, textDecoration: "none" }}>Contact info</a>
+                <div style={{ fontSize: "20px", fontWeight: 600, color: "#191919" }}>Muhamad Irham Prasetyo</div>
+                <div style={{ fontSize: "14px", color: "#191919", margin: "4px 0" }}>Senior Software Engineer at GET AG</div>
+                <div style={{ fontSize: "13px", color: "#666", marginBottom: 4 }}>
+                  Leipzig, Sachsen, Deutschland ·{" "}
+                  <a href={LINKEDIN_URL} target="_blank" rel="noreferrer" style={{ color: "#0a66c2", textDecoration: "none" }}>Contact info</a>
                 </div>
-                <div style={{ fontSize: "13px", color: "#0a66c2" }}>500+ connections</div>
+                <div style={{ fontSize: "13px", color: "#0a66c2", marginBottom: 8 }}>500+ connections</div>
+                <div style={{ fontSize: "12px", color: "#555" }}>
+                  <strong>Languages:</strong> Indonesian (Native) · English (Limited Working) · German (Limited Working)
+                </div>
               </div>
             </div>
           </div>
 
           {/* About */}
-          {user?.bio && (
-            <div style={{ background: "white", borderRadius: 8, border: "1px solid #e0e0e0", padding: "16px 24px", marginBottom: 12 }}>
-              <div style={{ fontSize: "16px", fontWeight: 600, marginBottom: 8 }}>About</div>
-              <div style={{ fontSize: "14px", color: "#191919", lineHeight: 1.6 }}>{user.bio}</div>
-            </div>
-          )}
+          <div style={{ background: "white", borderRadius: 8, border: "1px solid #e0e0e0", padding: "16px 24px", marginBottom: 12 }}>
+            <div style={{ fontSize: "16px", fontWeight: 600, marginBottom: 10 }}>About</div>
+            <div style={{ fontSize: "13px", color: "#191919", lineHeight: 1.7, whiteSpace: "pre-line" }}>{SUMMARY}</div>
+          </div>
 
           {/* Experience */}
           <div style={{ background: "white", borderRadius: 8, border: "1px solid #e0e0e0", padding: "16px 24px", marginBottom: 12 }}>
             <div style={{ fontSize: "16px", fontWeight: 600, marginBottom: 16 }}>Experience</div>
-            {[
-              { title: "Software Engineer", company: user?.company?.replace("@","") || "Tech Company", period: "2022 – Present", type: "Full-time" },
-              { title: "Frontend Developer", company: "Previous Company", period: "2020 – 2022", type: "Full-time" },
-            ].map((exp, i) => (
-              <div key={i} style={{ display: "flex", gap: 12, marginBottom: 16 }}>
+            {EXPERIENCE.map((exp, i) => (
+              <div key={i} style={{ display: "flex", gap: 12, marginBottom: i < EXPERIENCE.length - 1 ? 20 : 0, paddingBottom: i < EXPERIENCE.length - 1 ? 20 : 0, borderBottom: i < EXPERIENCE.length - 1 ? "1px solid #f0ece4" : "none" }}>
                 <div style={{ width: 44, height: 44, background: "#f3f2ef", border: "1px solid #e0e0e0", borderRadius: 4, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>🏢</div>
                 <div>
                   <div style={{ fontWeight: 600, fontSize: "14px" }}>{exp.title}</div>
-                  <div style={{ fontSize: "13px", color: "#191919" }}>{exp.company} · {exp.type}</div>
+                  <div style={{ fontSize: "13px", color: "#191919" }}>{exp.company} · Full-time</div>
                   <div style={{ fontSize: "12px", color: "#666" }}>{exp.period}</div>
-                  {user?.location && <div style={{ fontSize: "12px", color: "#666" }}>{user.location}</div>}
+                  <div style={{ fontSize: "12px", color: "#666", marginBottom: exp.desc ? 4 : 0 }}>{exp.location}</div>
+                  {exp.desc && <div style={{ fontSize: "13px", color: "#555", lineHeight: 1.5, marginTop: 4 }}>{exp.desc}</div>}
                 </div>
               </div>
             ))}
@@ -318,18 +367,31 @@ function LinkedInPage({ user, onNavigate, githubUrl }) {
             <div style={{ display: "flex", gap: 12 }}>
               <div style={{ width: 44, height: 44, background: "#f3f2ef", border: "1px solid #e0e0e0", borderRadius: 4, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>🎓</div>
               <div>
-                <div style={{ fontWeight: 600, fontSize: "14px" }}>University</div>
-                <div style={{ fontSize: "13px", color: "#191919" }}>Computer Science / Information Technology</div>
-                <div style={{ fontSize: "12px", color: "#666" }}>2016 – 2020</div>
+                <div style={{ fontWeight: 600, fontSize: "14px" }}>SAE Institute Leipzig</div>
+                <div style={{ fontSize: "13px", color: "#191919" }}>Diploma, Web Design & Development</div>
+                <div style={{ fontSize: "12px", color: "#666" }}>2015 – 2017</div>
               </div>
             </div>
+          </div>
+
+          {/* Certifications */}
+          <div style={{ background: "white", borderRadius: 8, border: "1px solid #e0e0e0", padding: "16px 24px", marginBottom: 12 }}>
+            <div style={{ fontSize: "16px", fontWeight: 600, marginBottom: 12 }}>Licenses & Certifications</div>
+            {CERTIFICATIONS.map((cert, i) => (
+              <div key={i} style={{ display: "flex", gap: 12, marginBottom: i < CERTIFICATIONS.length - 1 ? 14 : 0 }}>
+                <div style={{ width: 44, height: 44, background: "#f3f2ef", border: "1px solid #e0e0e0", borderRadius: 4, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>📜</div>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <div style={{ fontWeight: 600, fontSize: "13px" }}>{cert}</div>
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* Skills */}
           <div style={{ background: "white", borderRadius: 8, border: "1px solid #e0e0e0", padding: "16px 24px", marginBottom: 12 }}>
             <div style={{ fontSize: "16px", fontWeight: 600, marginBottom: 12 }}>Skills</div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-              {["JavaScript", "TypeScript", "React", "Next.js", "Node.js", "Go", "Docker", "PostgreSQL", "Git", "REST APIs"].map(skill => (
+              {SKILLS.map(skill => (
                 <span key={skill} style={{ border: "1px solid #c0c0c0", borderRadius: 14, padding: "4px 12px", fontSize: "12px", color: "#191919", background: "#f3f2ef" }}>{skill}</span>
               ))}
             </div>
@@ -341,6 +403,12 @@ function LinkedInPage({ user, onNavigate, githubUrl }) {
           <div style={{ background: "white", borderRadius: 8, border: "1px solid #e0e0e0", padding: "16px", marginBottom: 12 }}>
             <div style={{ fontSize: "13px", fontWeight: 600, marginBottom: 8 }}>Profile language</div>
             <div style={{ fontSize: "12px", color: "#666" }}>English</div>
+          </div>
+          <div style={{ background: "white", borderRadius: 8, border: "1px solid #e0e0e0", padding: "16px", marginBottom: 12 }}>
+            <div style={{ fontSize: "13px", fontWeight: 600, marginBottom: 8 }}>Top Skills</div>
+            {["Software Architecture", "Angular", "React.js"].map(s => (
+              <div key={s} style={{ fontSize: "12px", color: "#555", padding: "3px 0", borderBottom: "1px solid #f0ece4" }}>{s}</div>
+            ))}
           </div>
           <div style={{ background: "white", borderRadius: 8, border: "1px solid #e0e0e0", padding: "16px" }}>
             <div style={{ fontSize: "13px", fontWeight: 600, marginBottom: 8 }}>Also on</div>

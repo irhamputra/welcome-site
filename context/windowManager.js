@@ -7,7 +7,7 @@ const WINDOW_CONFIGS = {
   profile: { title: "About Me - System Properties", defaultWidth: 450, defaultHeight: 400 },
   mycomputer: { title: "My Computer", defaultWidth: 600, defaultHeight: 450 },
   recyclebin: { title: "Recycle Bin", defaultWidth: 500, defaultHeight: 350 },
-  ie: { title: "irhamputra (irhamputra) - GitHub - Microsoft Internet Explorer", defaultWidth: 800, defaultHeight: 560 },
+  ie: { title: "Muhamad Irham Prasetyo - LinkedIn - Microsoft Internet Explorer", defaultWidth: 800, defaultHeight: 560 },
   outlook: { title: "Inbox - Outlook Express", defaultWidth: 750, defaultHeight: 530 },
 };
 
