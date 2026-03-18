@@ -8,6 +8,7 @@ const WINDOW_CONFIGS = {
   mycomputer: { title: "My Computer", defaultWidth: 600, defaultHeight: 450 },
   recyclebin: { title: "Recycle Bin", defaultWidth: 500, defaultHeight: 350 },
   ie: { title: "irhamputra (irhamputra) - GitHub - Microsoft Internet Explorer", defaultWidth: 800, defaultHeight: 560 },
+  outlook: { title: "Inbox - Outlook Express", defaultWidth: 750, defaultHeight: 530 },
 };
 
 function getDefaultPosition(id, index) {
