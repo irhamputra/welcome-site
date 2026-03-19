@@ -107,7 +107,7 @@ const ROOT_FOLDERS = [
 
 // ── Main component ────────────────────────────────────────────────────────────
 export default function ReposWindow({ repos = [] }) {
-  const { recyclebin, moveToBin } = useWindowManager();
+  const { recyclebin, moveToBin, openWindow } = useWindowManager();
   const [view, setView] = useState("icons"); // "icons" | "details"
   const [location, setLocation] = useState("root"); // "root" | "mywork"
   const [history, setHistory] = useState(["root"]);
@@ -179,6 +179,7 @@ export default function ReposWindow({ repos = [] }) {
 
   const handleDoubleClick = (item) => {
     if (item.id === "mywork") { navigate("mywork"); return; }
+    if (item.id === "music") { openWindow("mymusic"); return; }
     if (item.isRepo) { window.open(item.url, "_blank"); return; }
   };
 
