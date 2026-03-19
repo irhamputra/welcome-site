@@ -17,6 +17,7 @@ import CalculatorWindow from "./windows/CalculatorWindow";
 import RunWindow from "./windows/RunWindow";
 import MSNMessengerWindow from "./windows/MSNMessengerWindow";
 import MinesweeperWindow from "./windows/MinesweeperWindow";
+import SolitaireWindow from "./windows/SolitaireWindow";
 import BSODScreen from "./BSODScreen";
 import BalloonNotification from "./BalloonNotification";
 import ContextMenu from "./ContextMenu";
@@ -28,6 +29,7 @@ const STATIC_ICONS = [
   { id: "outlook", icon: "/xp/icons/Windows XP Icons/Outlook Express.png", label: "Outlook Express" },
   { id: "paint", icon: "/xp/icons/Windows XP Icons/Paint.png", label: "Paint" },
   { id: "minesweeper", icon: "/xp/icons/Windows XP Icons/Minesweeper.png", label: "Minesweeper" },
+  { id: "solitaire", icon: "/xp/icons/Windows XP Icons/Solitaire.png", label: "Solitaire" },
 ];
 
 // Konami code sequence
@@ -243,6 +245,9 @@ export default function Desktop({ user, repos }) {
       </Window>
       <Window id="minesweeper" disableFullscreen>
         <MinesweeperWindow />
+      </Window>
+      <Window id="solitaire" disableFullscreen>
+        <SolitaireWindow />
       </Window>
 
       {/* Context Menu */}
