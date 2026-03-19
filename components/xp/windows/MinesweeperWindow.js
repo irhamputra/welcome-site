@@ -9,13 +9,13 @@ const CELL = 20; // px per cell
 //   game area padding: 6px top + 6px bottom = 12px
 //   header bar: content(~32px) + padding(4*2=8px) + border(2*2=4px) + marginBottom(6px) = 50px
 //   board: rows*CELL + border(3*2=6px)
-//   window title bar consumed by calc(100% - 28px): 28px
+//   window: title-bar=21px (border-box) + 3px bottom padding on .window = 24px total overhead
 function levelWindowSize(rows, cols) {
   const boardW = cols * CELL + 6;
   const boardH = rows * CELL + 6;
   const contentW = boardW + 18 + 8;        // board + game-area(pad+border) + outer
   const contentH = 24 + 50 + boardH + 18; // menu + header + board + game-area(pad+border)
-  return { width: contentW, height: contentH + 28 };
+  return { width: contentW, height: contentH + 24 };
 }
 
 const LEVELS = {

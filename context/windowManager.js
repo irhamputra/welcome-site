@@ -15,7 +15,7 @@ const WINDOW_CONFIGS = {
   calculator: { title: "Calculator", defaultWidth: 220, defaultHeight: 280 },
   run: { title: "Run", defaultWidth: 400, defaultHeight: 210 },
   msn: { title: "irham - MSN Messenger", defaultWidth: 360, defaultHeight: 420 },
-  minesweeper: { title: "Minesweeper", defaultWidth: 214, defaultHeight: 306 },
+  minesweeper: { title: "Minesweeper", defaultWidth: 214, defaultHeight: 302 },
 };
 
 function getDefaultPosition(id, index) {

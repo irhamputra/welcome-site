@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function DesktopIcon({ icon, label, onDoubleClick }) {
+export default function DesktopIcon({ icon, label, onDoubleClick, onContextMenu }) {
   const [selected, setSelected] = useState(false);
 
   return (
@@ -13,6 +13,12 @@ export default function DesktopIcon({ icon, label, onDoubleClick }) {
       onDoubleClick={() => {
         onDoubleClick?.();
         setSelected(false);
+      }}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setSelected(true);
+        onContextMenu?.(e);
       }}
       onBlur={() => setSelected(false)}
       tabIndex={0}

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useWindowManager } from "../../context/windowManager";
 import DesktopIcon from "./DesktopIcon";
 import Taskbar from "./Taskbar";
@@ -19,6 +19,7 @@ import MSNMessengerWindow from "./windows/MSNMessengerWindow";
 import MinesweeperWindow from "./windows/MinesweeperWindow";
 import BSODScreen from "./BSODScreen";
 import BalloonNotification from "./BalloonNotification";
+import ContextMenu from "./ContextMenu";
 
 const STATIC_ICONS = [
   { id: "mycomputer", icon: "/xp/icons/Windows XP Icons/My Computer.png", label: "My Computer" },
@@ -32,8 +33,45 @@ const STATIC_ICONS = [
 // Konami code sequence
 const KONAMI = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
 
+function getIconMenu(id, openWindow, emptyBin, binEmpty) {
+  switch (id) {
+    case "recyclebin":
+      return [
+        { label: "Open", onClick: () => openWindow("recyclebin") },
+        { label: "Empty Recycle Bin", onClick: () => emptyBin(), disabled: binEmpty },
+        "---",
+        { label: "Properties", disabled: true },
+      ];
+    case "mycomputer":
+      return [
+        { label: "Open", onClick: () => openWindow("mycomputer") },
+        { label: "Explore", onClick: () => openWindow("mycomputer") },
+        "---",
+        { label: "Create Shortcut", disabled: true },
+        { label: "Properties", onClick: () => openWindow("profile") },
+      ];
+    case "repos":
+      return [
+        { label: "Open", onClick: () => openWindow("repos") },
+        { label: "Explore", onClick: () => openWindow("repos") },
+        "---",
+        { label: "Create Shortcut", disabled: true },
+        { label: "Rename", disabled: true },
+        { label: "Properties", disabled: true },
+      ];
+    default:
+      return [
+        { label: "Open", onClick: () => openWindow(id) },
+        "---",
+        { label: "Create Shortcut", disabled: true },
+        { label: "Rename", disabled: true },
+        { label: "Properties", disabled: true },
+      ];
+  }
+}
+
 export default function Desktop({ user, repos }) {
-  const { openWindow, closeStartMenu, recyclebin } = useWindowManager();
+  const { openWindow, closeStartMenu, recyclebin, emptyBin } = useWindowManager();
   const recycleBinIcon = recyclebin.length > 0
     ? "/xp/icons/Windows XP Icons/Recycle Bin (full).png"
     : "/xp/icons/Windows XP Icons/Recycle Bin (empty).png";
@@ -46,7 +84,10 @@ export default function Desktop({ user, repos }) {
 
   const [showBSOD, setShowBSOD] = useState(false);
   const [showBalloon, setShowBalloon] = useState(false);
+  const [contextMenu, setContextMenu] = useState(null); // { x, y, items }
   const konamiRef = useRef([]);
+
+  const closeContextMenu = useCallback(() => setContextMenu(null), []);
 
   // Show balloon after 2s on mount
   useEffect(() => {
@@ -87,8 +128,45 @@ export default function Desktop({ user, repos }) {
     setShowBalloon(false);
   };
 
+  const handleDesktopContextMenu = (e) => {
+    e.preventDefault();
+    closeStartMenu();
+    setContextMenu({
+      x: e.clientX,
+      y: e.clientY,
+      items: [
+        { label: "Arrange Icons By", hasSubmenu: true },
+        { label: "Refresh" },
+        "---",
+        { label: "Paste", disabled: true },
+        { label: "Paste Shortcut", disabled: true },
+        "---",
+        { label: "New", hasSubmenu: true },
+        "---",
+        { label: "Properties", onClick: () => openWindow("mycomputer") },
+      ],
+    });
+  };
+
+  const handleIconContextMenu = (e, iconId) => {
+    setContextMenu({
+      x: e.clientX,
+      y: e.clientY,
+      items: getIconMenu(iconId, openWindow, emptyBin, recyclebin.length === 0),
+    });
+  };
+
   return (
-    <div className="xp-desktop" onClick={() => closeStartMenu()}>
+    <div
+      className="xp-desktop"
+      onClick={() => { closeStartMenu(); closeContextMenu(); }}
+      onContextMenu={(e) => {
+        // Only trigger on the desktop background (not windows, taskbar, etc.)
+        if (e.target === e.currentTarget) {
+          handleDesktopContextMenu(e);
+        }
+      }}
+    >
       {showBSOD && (
         <BSODScreen onDismiss={() => setShowBSOD(false)} />
       )}
@@ -109,6 +187,11 @@ export default function Desktop({ user, repos }) {
             icons.forEach((icon) => icon.classList.remove("selected"));
           }
         }}
+        onContextMenu={(e) => {
+          if (e.target === e.currentTarget) {
+            handleDesktopContextMenu(e);
+          }
+        }}
       >
         {DESKTOP_ICONS.map((item) => (
           <DesktopIcon
@@ -116,6 +199,7 @@ export default function Desktop({ user, repos }) {
             icon={item.icon}
             label={item.label}
             onDoubleClick={() => openWindow(item.id)}
+            onContextMenu={(e) => handleIconContextMenu(e, item.id)}
           />
         ))}
       </div>
@@ -160,6 +244,16 @@ export default function Desktop({ user, repos }) {
       <Window id="minesweeper" disableFullscreen>
         <MinesweeperWindow />
       </Window>
+
+      {/* Context Menu */}
+      {contextMenu && (
+        <ContextMenu
+          x={contextMenu.x}
+          y={contextMenu.y}
+          items={contextMenu.items}
+          onClose={closeContextMenu}
+        />
+      )}
 
       {/* Start Menu */}
       <StartMenu user={user} />

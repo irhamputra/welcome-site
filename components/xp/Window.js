@@ -123,7 +123,7 @@ export default function Window({ id, children, disableFullscreen }) {
       <div
         className="window-body"
         style={{
-          height: "calc(100% - 28px)",
+          height: "calc(100% - 21px)",
           overflow: "hidden",
           margin: 0,
           padding: 0,
