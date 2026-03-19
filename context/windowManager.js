@@ -7,7 +7,7 @@ const WINDOW_CONFIGS = {
   profile: { title: "About Me - System Properties", defaultWidth: 450, defaultHeight: 400 },
   mycomputer: { title: "My Computer", defaultWidth: 600, defaultHeight: 450 },
   recyclebin: { title: "Recycle Bin", defaultWidth: 500, defaultHeight: 350 },
-  ie: { title: "Muhamad Irham Prasetyo - LinkedIn - Microsoft Internet Explorer", defaultWidth: 800, defaultHeight: 560 },
+  ie: { title: "Microsoft Internet Explorer", defaultWidth: 800, defaultHeight: 560 },
   outlook: { title: "Inbox - Outlook Express", defaultWidth: 750, defaultHeight: 530 },
   paint: { title: "Untitled - Paint", defaultWidth: 820, defaultHeight: 580 },
   notepad: { title: "Untitled - Notepad", defaultWidth: 560, defaultHeight: 400 },
@@ -134,6 +134,15 @@ function windowReducer(state, action) {
       };
     }
 
+    case "SET_WINDOW_TITLE": {
+      const { id, title } = action;
+      const newWindows = { ...state.windows };
+      if (newWindows[id]) {
+        newWindows[id] = { ...newWindows[id], title };
+      }
+      return { ...state, windows: newWindows };
+    }
+
     case "UPDATE_POSITION": {
       const { id, position } = action;
       const newWindows = { ...state.windows };
@@ -166,6 +175,7 @@ export function WindowManagerProvider({ children }) {
   const maximizeWindow = useCallback((id) => dispatch({ type: "MAXIMIZE_WINDOW", id }), []);
   const focusWindow = useCallback((id) => dispatch({ type: "FOCUS_WINDOW", id }), []);
   const updatePosition = useCallback((id, position) => dispatch({ type: "UPDATE_POSITION", id, position }), []);
+  const setWindowTitle = useCallback((id, title) => dispatch({ type: "SET_WINDOW_TITLE", id, title }), []);
   const toggleStartMenu = useCallback(() => dispatch({ type: "TOGGLE_START_MENU" }), []);
   const closeStartMenu = useCallback(() => dispatch({ type: "CLOSE_START_MENU" }), []);
 
@@ -178,6 +188,7 @@ export function WindowManagerProvider({ children }) {
     maximizeWindow,
     focusWindow,
     updatePosition,
+    setWindowTitle,
     toggleStartMenu,
     closeStartMenu,
   };
