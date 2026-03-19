@@ -34,7 +34,22 @@ export default function PaintWindow() {
   const [activeMenu, setActiveMenu] = useState(null);
   const [statusText, setStatusText] = useState("For Help, click Help Topics on the Help Menu.");
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = useState(false);
   const [canvasSize, setCanvasSize] = useState({ w: 600, h: 400 });
+
+  useEffect(() => {
+    const check = () => {
+      const mobile = window.innerWidth < 640;
+      setIsMobile(mobile);
+      if (mobile) {
+        const w = Math.max(280, window.innerWidth - 80);
+        setCanvasSize({ w, h: Math.round(w * 0.6) });
+      }
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const drawing = useRef(false);
   const startPos = useRef({ x: 0, y: 0 });
@@ -51,7 +66,7 @@ export default function PaintWindow() {
     const ctx = canvas.getContext("2d");
     ctx.fillStyle = "#FFFFFF";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-  }, []);
+  }, [canvasSize]);
 
   const getPos = (e) => {
     const canvas = canvasRef.current;
@@ -199,7 +214,6 @@ export default function PaintWindow() {
       ctx.fillRect(pos.x - sz / 2, pos.y - sz / 2, sz, sz);
       lastPos.current = pos;
     } else if (["line", "rect", "ellipse"].includes(tool)) {
-      // Draw on overlay canvas
       const overlay = overlayRef.current;
       const octx = overlay.getContext("2d");
       octx.clearRect(0, 0, overlay.width, overlay.height);
@@ -217,7 +231,6 @@ export default function PaintWindow() {
     const color = fgColor;
 
     if (["line", "rect", "ellipse"].includes(tool)) {
-      // Commit overlay to main canvas
       const overlay = overlayRef.current;
       const octx = overlay.getContext("2d");
       octx.clearRect(0, 0, overlay.width, overlay.height);
@@ -270,14 +283,14 @@ export default function PaintWindow() {
     >
       {/* Menu Bar */}
       <div
-        style={{ display: "flex", borderBottom: "1px solid #aca899", background: "#f1efe2", padding: "1px 4px", gap: "2px", flexShrink: 0 }}
+        style={{ display: "flex", borderBottom: "1px solid #aca899", background: "#f1efe2", padding: "1px 4px", gap: "2px", flexShrink: 0, overflowX: "auto" }}
         onClick={(e) => e.stopPropagation()}
       >
         {["File", "Edit", "View", "Image", "Colors", "Help"].map((menu) => (
           <div
             key={menu}
             onClick={() => setActiveMenu(activeMenu === menu ? null : menu)}
-            style={{ padding: "2px 6px", cursor: "default", background: activeMenu === menu ? "#316ac5" : "transparent", color: activeMenu === menu ? "white" : "black", borderRadius: "2px", position: "relative" }}
+            style={{ padding: "2px 6px", cursor: "default", background: activeMenu === menu ? "#316ac5" : "transparent", color: activeMenu === menu ? "white" : "black", borderRadius: "2px", position: "relative", whiteSpace: "nowrap", flexShrink: 0 }}
           >
             {menu}
             {activeMenu === menu && (
@@ -303,76 +316,115 @@ export default function PaintWindow() {
         ))}
       </div>
 
+      {/* Mobile: Horizontal Tool Strip */}
+      {isMobile && (
+        <div style={{ display: "flex", alignItems: "center", gap: 2, padding: "4px 6px", background: "#d4d0c8", borderBottom: "1px solid #aca899", flexShrink: 0, overflowX: "auto" }}>
+          {TOOLS.map((t) => (
+            <button
+              key={t.id}
+              title={t.label}
+              onClick={() => { setTool(t.id); setTextPos(null); }}
+              style={{
+                width: 28, height: 28, flexShrink: 0,
+                background: tool === t.id ? "#e8e4d0" : "#d4d0c8",
+                border: tool === t.id ? "2px inset #808080" : "2px outset #ffffff",
+                cursor: "default",
+                fontSize: t.id === "text" ? 14 : 13,
+                fontWeight: t.id === "text" ? "bold" : "normal",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                padding: 0, color: "#000",
+              }}
+            >
+              {t.icon}
+            </button>
+          ))}
+          <div style={{ width: 1, height: 20, background: "#aca899", margin: "0 2px", flexShrink: 0 }} />
+          {BRUSH_SIZES.map((s) => (
+            <div
+              key={s}
+              onClick={() => setBrushSize(s)}
+              style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 24, height: 24, cursor: "default", background: brushSize === s ? "#316ac5" : "transparent", borderRadius: 2, flexShrink: 0 }}
+            >
+              <div style={{ width: s * 2, height: s, background: brushSize === s ? "white" : "#000", borderRadius: s }} />
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Main area */}
       <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
-        {/* Tool Box */}
-        <div style={{ width: 52, background: "#d4d0c8", borderRight: "1px solid #aca899", padding: "4px 2px", display: "flex", flexDirection: "column", gap: 1, flexShrink: 0, overflowY: "auto" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
-            {TOOLS.map((t) => (
-              <button
-                key={t.id}
-                title={t.label}
-                onClick={() => { setTool(t.id); setTextPos(null); }}
-                style={{
-                  width: 22, height: 22,
-                  background: tool === t.id ? "#e8e4d0" : "#d4d0c8",
-                  border: tool === t.id ? "2px inset #808080" : "2px outset #ffffff",
-                  cursor: "default",
-                  fontSize: t.id === "text" ? 13 : 12,
-                  fontWeight: t.id === "text" ? "bold" : "normal",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  padding: 0,
-                  color: "#000",
-                }}
-              >
-                {t.icon}
-              </button>
-            ))}
-          </div>
+        {/* Tool Box — desktop only */}
+        {!isMobile && (
+          <div style={{ width: 52, background: "#d4d0c8", borderRight: "1px solid #aca899", padding: "4px 2px", display: "flex", flexDirection: "column", gap: 1, flexShrink: 0, overflowY: "auto" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
+              {TOOLS.map((t) => (
+                <button
+                  key={t.id}
+                  title={t.label}
+                  onClick={() => { setTool(t.id); setTextPos(null); }}
+                  style={{
+                    width: 22, height: 22,
+                    background: tool === t.id ? "#e8e4d0" : "#d4d0c8",
+                    border: tool === t.id ? "2px inset #808080" : "2px outset #ffffff",
+                    cursor: "default",
+                    fontSize: t.id === "text" ? 13 : 12,
+                    fontWeight: t.id === "text" ? "bold" : "normal",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    padding: 0, color: "#000",
+                  }}
+                >
+                  {t.icon}
+                </button>
+              ))}
+            </div>
 
-          {/* Brush size */}
-          <div style={{ marginTop: 6, padding: "2px", border: "1px inset #808080", background: "#d4d0c8" }}>
-            {BRUSH_SIZES.map((s) => (
+            {/* Brush size */}
+            <div style={{ marginTop: 6, padding: "2px", border: "1px inset #808080", background: "#d4d0c8" }}>
+              {BRUSH_SIZES.map((s) => (
+                <div
+                  key={s}
+                  onClick={() => setBrushSize(s)}
+                  style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 14, cursor: "default", background: brushSize === s ? "#316ac5" : "transparent" }}
+                >
+                  <div style={{ width: s * 3, height: s, background: brushSize === s ? "white" : "#000", borderRadius: s }} />
+                </div>
+              ))}
+            </div>
+
+            {/* FG / BG color swatches */}
+            <div style={{ marginTop: 6, position: "relative", height: 30, width: 44 }}>
               <div
-                key={s}
-                onClick={() => setBrushSize(s)}
-                style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 14, cursor: "default", background: brushSize === s ? "#316ac5" : "transparent" }}
-              >
-                <div style={{ width: s * 3, height: s, background: brushSize === s ? "white" : "#000", borderRadius: s }} />
-              </div>
-            ))}
+                style={{ position: "absolute", bottom: 0, right: 0, width: 20, height: 20, background: bgColor, border: "1px solid #000", cursor: "pointer" }}
+                title="Background color"
+                onClick={() => {}}
+              />
+              <div
+                style={{ position: "absolute", top: 0, left: 0, width: 20, height: 20, background: fgColor, border: "1px solid #000", cursor: "pointer", zIndex: 1 }}
+                title="Foreground color"
+                onClick={() => {}}
+              />
+            </div>
           </div>
-
-          {/* FG / BG color swatches */}
-          <div style={{ marginTop: 6, position: "relative", height: 30, width: 44 }}>
-            <div
-              style={{ position: "absolute", bottom: 0, right: 0, width: 20, height: 20, background: bgColor, border: "1px solid #000", cursor: "pointer" }}
-              title="Background color"
-              onClick={() => {}}
-            />
-            <div
-              style={{ position: "absolute", top: 0, left: 0, width: 20, height: 20, background: fgColor, border: "1px solid #000", cursor: "pointer", zIndex: 1 }}
-              title="Foreground color"
-              onClick={() => {}}
-            />
-          </div>
-        </div>
+        )}
 
         {/* Canvas area */}
         <div
           ref={containerRef}
-          style={{ flex: 1, overflow: "auto", background: "#808080", padding: "8px", display: "flex", alignItems: "flex-start", justifyContent: "flex-start" }}
+          style={{ flex: 1, overflow: "auto", background: "#808080", padding: isMobile ? "4px" : "8px", display: "flex", alignItems: "flex-start", justifyContent: "flex-start" }}
         >
           <div style={{ position: "relative", display: "inline-block", boxShadow: "2px 2px 6px rgba(0,0,0,0.4)" }}>
             <canvas
               ref={canvasRef}
               width={canvasSize.w}
               height={canvasSize.h}
-              style={{ display: "block", cursor: getCursor() }}
+              style={{ display: "block", cursor: getCursor(), touchAction: "none" }}
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}
               onMouseLeave={handleMouseUp}
+              onTouchStart={handleMouseDown}
+              onTouchMove={handleMouseMove}
+              onTouchEnd={handleMouseUp}
               onContextMenu={(e) => { e.preventDefault(); handleMouseDown(e); }}
             />
             {/* Overlay canvas for shape preview */}
@@ -406,30 +458,34 @@ export default function PaintWindow() {
                 }}
               />
             )}
-            {/* Resize handles */}
-            <ResizeHandle pos="right" canvasSize={canvasSize} setCanvasSize={setCanvasSize} canvasRef={canvasRef} />
-            <ResizeHandle pos="bottom" canvasSize={canvasSize} setCanvasSize={setCanvasSize} canvasRef={canvasRef} />
-            <ResizeHandle pos="corner" canvasSize={canvasSize} setCanvasSize={setCanvasSize} canvasRef={canvasRef} />
+            {/* Resize handles — desktop only */}
+            {!isMobile && (
+              <>
+                <ResizeHandle pos="right" canvasSize={canvasSize} setCanvasSize={setCanvasSize} canvasRef={canvasRef} />
+                <ResizeHandle pos="bottom" canvasSize={canvasSize} setCanvasSize={setCanvasSize} canvasRef={canvasRef} />
+                <ResizeHandle pos="corner" canvasSize={canvasSize} setCanvasSize={setCanvasSize} canvasRef={canvasRef} />
+              </>
+            )}
           </div>
         </div>
       </div>
 
       {/* Color Palette */}
-      <div style={{ display: "flex", alignItems: "center", gap: 2, padding: "3px 6px", background: "#d4d0c8", borderTop: "1px solid #aca899", flexShrink: 0 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 2, padding: "3px 6px", background: "#d4d0c8", borderTop: "1px solid #aca899", flexShrink: 0, overflowX: "auto" }}>
         {/* FG/BG swatch */}
         <div style={{ position: "relative", width: 28, height: 22, marginRight: 4, flexShrink: 0 }}>
           <div style={{ position: "absolute", bottom: 0, right: 0, width: 16, height: 16, background: bgColor, border: "1px solid #000" }} />
           <div style={{ position: "absolute", top: 0, left: 0, width: 16, height: 16, background: fgColor, border: "1px solid #000", zIndex: 1 }} />
         </div>
         {/* Palette */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 1, width: 260 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
           {COLORS.map((c) => (
             <div
               key={c}
               title={c}
               onClick={() => setFgColor(c)}
               onContextMenu={(e) => { e.preventDefault(); setBgColor(c); }}
-              style={{ width: 14, height: 14, background: c, border: fgColor === c ? "2px inset #fff" : "1px solid #808080", cursor: "pointer", flexShrink: 0 }}
+              style={{ width: isMobile ? 16 : 14, height: isMobile ? 16 : 14, background: c, border: fgColor === c ? "2px inset #fff" : "1px solid #808080", cursor: "pointer", flexShrink: 0 }}
             />
           ))}
         </div>
@@ -437,8 +493,8 @@ export default function PaintWindow() {
 
       {/* Status bar */}
       <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "1px 6px", background: "#d4d0c8", borderTop: "1px solid #aca899", fontSize: "11px", color: "#000", flexShrink: 0, height: 18 }}>
-        <span style={{ flex: 1 }}>{statusText}</span>
-        <span>{cursorPos.x}, {cursorPos.y}</span>
+        <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{statusText}</span>
+        {!isMobile && <span>{cursorPos.x}, {cursorPos.y}</span>}
         <span>{canvasSize.w}x{canvasSize.h}</span>
       </div>
     </div>
@@ -474,11 +530,9 @@ function ResizeHandle({ pos, canvasSize, setCanvasSize, canvasRef }) {
       const newW = pos === "bottom" ? startRef.current.w : Math.max(100, startRef.current.w + dx);
       const newH = pos === "right"  ? startRef.current.h : Math.max(100, startRef.current.h + dy);
 
-      // Preserve existing drawing
       const canvas = canvasRef.current;
       const snapshot = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height);
       setCanvasSize({ w: newW, h: newH });
-      // Restore after resize (useEffect in parent handles this)
       setTimeout(() => {
         const ctx = canvas.getContext("2d");
         ctx.fillStyle = "#ffffff";

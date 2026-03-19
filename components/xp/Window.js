@@ -92,7 +92,7 @@ export default function Window({ id, children }) {
         top: 0,
         left: 0,
         width: "100%",
-        height: isMobile ? "calc(100% - 48px)" : "calc(100% - 40px)",
+        height: "calc(100% - 40px)",
         zIndex: win.zIndex,
         borderRadius: 0,
       }
@@ -113,7 +113,7 @@ export default function Window({ id, children }) {
       onMouseDown={() => focusWindow(id)}
     >
       <div className="title-bar" onMouseDown={handleTitleBarMouseDown} style={{ cursor: isFullscreen ? "default" : "move" }}>
-        <div className="title-bar-text">{win.title}</div>
+        <div className="title-bar-text" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0, flex: 1 }}>{win.title}</div>
         <div className="title-bar-controls">
           <button aria-label="Minimize" onClick={() => minimizeWindow(id)} />
           <button aria-label="Maximize" onClick={() => maximizeWindow(id)} />

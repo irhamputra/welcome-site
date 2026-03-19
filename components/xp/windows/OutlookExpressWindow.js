@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const CONTACT_EMAIL = "irhamputraprasetyo@gmail.com";
 
@@ -44,6 +44,15 @@ export default function OutlookExpressWindow() {
   const [activeMenu, setActiveMenu] = useState(null);
   const [messages, setMessages] = useState(INBOX_MESSAGES);
   const [readIds, setReadIds] = useState(new Set());
+  const [isMobile, setIsMobile] = useState(false);
+  const [showFolders, setShowFolders] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   // Compose form state
   const [composeTo, setComposeTo] = useState(CONTACT_EMAIL);
@@ -57,6 +66,7 @@ export default function OutlookExpressWindow() {
     setComposeBody("");
     setSendStatus(null);
     setView("compose");
+    setShowFolders(false);
   };
 
   const handleSend = () => {
@@ -90,14 +100,14 @@ export default function OutlookExpressWindow() {
     >
       {/* Menu Bar */}
       <div
-        style={{ display: "flex", borderBottom: "1px solid #aca899", background: "#f1efe2", padding: "1px 4px", gap: "2px", flexShrink: 0 }}
+        style={{ display: "flex", borderBottom: "1px solid #aca899", background: "#f1efe2", padding: "1px 4px", gap: "2px", flexShrink: 0, overflowX: "auto" }}
         onClick={(e) => e.stopPropagation()}
       >
         {["File", "Edit", "View", "Tools", "Message", "Help"].map((menu) => (
           <div
             key={menu}
             onClick={() => setActiveMenu(activeMenu === menu ? null : menu)}
-            style={{ padding: "2px 6px", cursor: "default", background: activeMenu === menu ? "#316ac5" : "transparent", color: activeMenu === menu ? "white" : "black", borderRadius: "2px", position: "relative" }}
+            style={{ padding: "2px 6px", cursor: "default", background: activeMenu === menu ? "#316ac5" : "transparent", color: activeMenu === menu ? "white" : "black", borderRadius: "2px", position: "relative", whiteSpace: "nowrap", flexShrink: 0 }}
           >
             {menu}
             {activeMenu === menu && (
@@ -124,38 +134,45 @@ export default function OutlookExpressWindow() {
       </div>
 
       {/* Toolbar */}
-      <div style={{ display: "flex", alignItems: "center", gap: "2px", padding: "2px 6px", background: "#f1efe2", borderBottom: "1px solid #aca899", flexShrink: 0 }}>
-        <ToolBtn icon="/xp/icons/Windows XP Icons/OE Create Mail.png" label="New Mail" onClick={openCompose} />
-        <div style={{ width: 1, height: 28, background: "#aca899", margin: "0 2px" }} />
-        <ToolBtn icon="/xp/icons/Windows XP Icons/OE Reply.png" label="Reply" disabled={view !== "inbox" || !selectedMessage} onClick={() => { if (selectedMessage) openCompose(); }} />
-        <ToolBtn icon="/xp/icons/Windows XP Icons/OE Reply All.png" label="Reply All" disabled />
-        <ToolBtn icon="/xp/icons/Windows XP Icons/OE Forward.png" label="Forward" disabled />
-        <div style={{ width: 1, height: 28, background: "#aca899", margin: "0 2px" }} />
-        <ToolBtn icon="/xp/icons/Windows XP Icons/OE Send and Receive.png" label="Send/Recv" onClick={() => {}} />
-        <div style={{ width: 1, height: 28, background: "#aca899", margin: "0 2px" }} />
-        <ToolBtn icon="/xp/icons/Windows XP Icons/Email.png" label="Addresses" disabled />
+      <div style={{ display: "flex", alignItems: "center", gap: "2px", padding: "2px 6px", background: "#f1efe2", borderBottom: "1px solid #aca899", flexShrink: 0, overflowX: "auto" }}>
+        <ToolBtn icon="/xp/icons/Windows XP Icons/OE Create Mail.png" label="New Mail" onClick={openCompose} isMobile={isMobile} />
+        <div style={{ width: 1, height: 28, background: "#aca899", margin: "0 2px", flexShrink: 0 }} />
+        <ToolBtn icon="/xp/icons/Windows XP Icons/OE Reply.png" label="Reply" disabled={view !== "inbox" || !selectedMessage} onClick={() => { if (selectedMessage) openCompose(); }} isMobile={isMobile} />
+        <ToolBtn icon="/xp/icons/Windows XP Icons/OE Reply All.png" label="Reply All" disabled isMobile={isMobile} />
+        <ToolBtn icon="/xp/icons/Windows XP Icons/OE Forward.png" label="Forward" disabled isMobile={isMobile} />
+        <div style={{ width: 1, height: 28, background: "#aca899", margin: "0 2px", flexShrink: 0 }} />
+        <ToolBtn icon="/xp/icons/Windows XP Icons/OE Send and Receive.png" label="Send/Recv" onClick={() => {}} isMobile={isMobile} />
+        {!isMobile && (
+          <>
+            <div style={{ width: 1, height: 28, background: "#aca899", margin: "0 2px", flexShrink: 0 }} />
+            <ToolBtn icon="/xp/icons/Windows XP Icons/Email.png" label="Addresses" disabled isMobile={false} />
+          </>
+        )}
+        {/* Mobile: Folders toggle */}
+        {isMobile && (
+          <button
+            onClick={() => setShowFolders(!showFolders)}
+            style={{ marginLeft: "auto", padding: "2px 8px", background: showFolders ? "#316ac5" : "transparent", color: showFolders ? "white" : "#333", border: "1px solid #aca899", borderRadius: 2, fontSize: 11, cursor: "pointer", flexShrink: 0 }}
+          >
+            📁 Folders
+          </button>
+        )}
       </div>
 
-      {/* Body */}
-      <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
-        {/* Left Folder Pane */}
-        <div style={{ width: 160, borderRight: "1px solid #aca899", background: "#f8f6f0", flexShrink: 0, overflow: "auto", paddingTop: 4 }}>
-          <div style={{ padding: "4px 8px", fontSize: "11px", fontWeight: "bold", color: "#555", textTransform: "uppercase", letterSpacing: "0.5px" }}>
-            Local Folders
-          </div>
+      {/* Mobile Folder Dropdown */}
+      {isMobile && showFolders && (
+        <div style={{ background: "#f8f6f0", borderBottom: "1px solid #aca899", flexShrink: 0, zIndex: 10 }}>
           {FOLDERS.map((folder) => {
             const unread = unreadCount(folder.id);
             const isActive = activeFolder === folder.id;
             return (
               <div
                 key={folder.id}
-                onClick={() => { setActiveFolder(folder.id); setView("inbox"); setSelectedMessage(null); }}
-                style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 12px", cursor: "default", background: isActive ? "#316ac5" : "transparent", color: isActive ? "white" : "#000" }}
-                onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.background = "#e8e4d8"; }}
-                onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.background = "transparent"; }}
+                onClick={() => { setActiveFolder(folder.id); setView("inbox"); setSelectedMessage(null); setShowFolders(false); }}
+                style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 16px", cursor: "default", background: isActive ? "#316ac5" : "transparent", color: isActive ? "white" : "#000" }}
               >
-                <span style={{ fontSize: 13 }}>{folder.icon}</span>
-                <span style={{ flex: 1, fontSize: 12, fontWeight: unread > 0 ? "bold" : "normal" }}>{folder.label}</span>
+                <span style={{ fontSize: 14 }}>{folder.icon}</span>
+                <span style={{ flex: 1, fontSize: 13, fontWeight: unread > 0 ? "bold" : "normal" }}>{folder.label}</span>
                 {unread > 0 && (
                   <span style={{ fontSize: 11, color: isActive ? "white" : "#316ac5", fontWeight: "bold" }}>({unread})</span>
                 )}
@@ -163,6 +180,37 @@ export default function OutlookExpressWindow() {
             );
           })}
         </div>
+      )}
+
+      {/* Body */}
+      <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
+        {/* Left Folder Pane — desktop only */}
+        {!isMobile && (
+          <div style={{ width: 160, borderRight: "1px solid #aca899", background: "#f8f6f0", flexShrink: 0, overflow: "auto", paddingTop: 4 }}>
+            <div style={{ padding: "4px 8px", fontSize: "11px", fontWeight: "bold", color: "#555", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+              Local Folders
+            </div>
+            {FOLDERS.map((folder) => {
+              const unread = unreadCount(folder.id);
+              const isActive = activeFolder === folder.id;
+              return (
+                <div
+                  key={folder.id}
+                  onClick={() => { setActiveFolder(folder.id); setView("inbox"); setSelectedMessage(null); }}
+                  style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 12px", cursor: "default", background: isActive ? "#316ac5" : "transparent", color: isActive ? "white" : "#000" }}
+                  onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.background = "#e8e4d8"; }}
+                  onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.background = "transparent"; }}
+                >
+                  <span style={{ fontSize: 13 }}>{folder.icon}</span>
+                  <span style={{ flex: 1, fontSize: 12, fontWeight: unread > 0 ? "bold" : "normal" }}>{folder.label}</span>
+                  {unread > 0 && (
+                    <span style={{ fontSize: 11, color: isActive ? "white" : "#316ac5", fontWeight: "bold" }}>({unread})</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* Right Pane */}
         {view === "compose" ? (
@@ -176,15 +224,20 @@ export default function OutlookExpressWindow() {
             onSend={handleSend}
             onCancel={() => setView("inbox")}
             sendStatus={sendStatus}
+            isMobile={isMobile}
           />
         ) : (
           <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
             {/* Message List */}
-            <div style={{ height: 160, borderBottom: "1px solid #aca899", overflow: "auto", background: "white" }}>
+            <div style={{ height: isMobile ? 130 : 160, borderBottom: "1px solid #aca899", overflow: "auto", background: "white", flexShrink: 0 }}>
               {/* List header */}
-              <div style={{ display: "grid", gridTemplateColumns: "24px 1fr 160px 110px", background: "#f1efe2", borderBottom: "1px solid #aca899", padding: "2px 0", position: "sticky", top: 0 }}>
-                {["", "From / Subject", "Received", ""].map((h, i) => (
-                  <div key={i} style={{ padding: "2px 8px", fontSize: 11, color: "#555", borderRight: i < 3 ? "1px solid #aca899" : "none", fontWeight: 600 }}>{h}</div>
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: isMobile ? "20px 1fr 90px" : "24px 1fr 160px 110px",
+                background: "#f1efe2", borderBottom: "1px solid #aca899", padding: "2px 0", position: "sticky", top: 0
+              }}>
+                {(isMobile ? ["", "From / Subject", "Date"] : ["", "From / Subject", "Received", ""]).map((h, i) => (
+                  <div key={i} style={{ padding: "2px 8px", fontSize: 11, color: "#555", borderRight: i < (isMobile ? 2 : 3) ? "1px solid #aca899" : "none", fontWeight: 600 }}>{h}</div>
                 ))}
               </div>
 
@@ -196,19 +249,26 @@ export default function OutlookExpressWindow() {
                     <div
                       key={msg.id}
                       onClick={() => handleSelectMessage(msg)}
-                      style={{ display: "grid", gridTemplateColumns: "24px 1fr 160px 110px", background: isSelected ? "#316ac5" : "white", color: isSelected ? "white" : "black", cursor: "default", borderBottom: "1px solid #f0ece0" }}
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: isMobile ? "20px 1fr 90px" : "24px 1fr 160px 110px",
+                        background: isSelected ? "#316ac5" : "white", color: isSelected ? "white" : "black",
+                        cursor: "default", borderBottom: "1px solid #f0ece0"
+                      }}
                       onMouseEnter={(e) => { if (!isSelected) e.currentTarget.style.background = "#e8f0fe"; }}
                       onMouseLeave={(e) => { if (!isSelected) e.currentTarget.style.background = "white"; }}
                     >
-                      <div style={{ padding: "4px 6px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <div style={{ padding: "4px 4px", display: "flex", alignItems: "center", justifyContent: "center" }}>
                         {!isRead && <span style={{ color: isSelected ? "white" : "#316ac5", fontSize: 10 }}>●</span>}
                       </div>
-                      <div style={{ padding: "4px 8px" }}>
-                        <div style={{ fontWeight: isRead ? "normal" : "bold", fontSize: 12 }}>{msg.from}</div>
-                        <div style={{ fontSize: 11, color: isSelected ? "rgba(255,255,255,0.8)" : "#555" }}>{msg.subject}</div>
+                      <div style={{ padding: "4px 8px", minWidth: 0 }}>
+                        <div style={{ fontWeight: isRead ? "normal" : "bold", fontSize: 12, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{msg.from}</div>
+                        <div style={{ fontSize: 11, color: isSelected ? "rgba(255,255,255,0.8)" : "#555", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{msg.subject}</div>
                       </div>
-                      <div style={{ padding: "4px 8px", fontSize: 11, color: isSelected ? "rgba(255,255,255,0.8)" : "#555", display: "flex", alignItems: "center" }}>{msg.date}</div>
-                      <div />
+                      <div style={{ padding: "4px 6px", fontSize: isMobile ? 10 : 11, color: isSelected ? "rgba(255,255,255,0.8)" : "#555", display: "flex", alignItems: "center", whiteSpace: "nowrap", overflow: "hidden" }}>
+                        {isMobile ? msg.date.split(" ")[0] : msg.date}
+                      </div>
+                      {!isMobile && <div />}
                     </div>
                   );
                 })
@@ -224,12 +284,12 @@ export default function OutlookExpressWindow() {
               {selectedMessage && activeFolder === "inbox" ? (
                 <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
                   {/* Header */}
-                  <div style={{ padding: "8px 12px", borderBottom: "1px solid #aca899", background: "#f8f6f0", flexShrink: 0 }}>
+                  <div style={{ padding: isMobile ? "6px 10px" : "8px 12px", borderBottom: "1px solid #aca899", background: "#f8f6f0", flexShrink: 0 }}>
                     <table style={{ fontSize: 12, borderCollapse: "collapse", width: "100%" }}>
                       <tbody>
                         <tr>
                           <td style={{ fontWeight: "bold", paddingRight: 8, color: "#555", whiteSpace: "nowrap", width: 60 }}>From:</td>
-                          <td>{selectedMessage.from} &lt;{selectedMessage.email}&gt;</td>
+                          <td style={{ overflow: "hidden", textOverflow: "ellipsis", maxWidth: 0, whiteSpace: "nowrap" }}>{selectedMessage.from} &lt;{selectedMessage.email}&gt;</td>
                         </tr>
                         <tr>
                           <td style={{ fontWeight: "bold", paddingRight: 8, color: "#555" }}>Date:</td>
@@ -247,12 +307,12 @@ export default function OutlookExpressWindow() {
                     </table>
                   </div>
                   {/* Body */}
-                  <div style={{ flex: 1, padding: "12px 16px", fontSize: 13, lineHeight: 1.7, whiteSpace: "pre-wrap", color: "#1a1a1a", userSelect: "text", fontFamily: "Tahoma, Arial, sans-serif", overflow: "auto" }}>
+                  <div style={{ flex: 1, padding: isMobile ? "10px 12px" : "12px 16px", fontSize: 13, lineHeight: 1.7, whiteSpace: "pre-wrap", color: "#1a1a1a", userSelect: "text", fontFamily: "Tahoma, Arial, sans-serif", overflow: "auto" }}>
                     {selectedMessage.body}
                     <div style={{ marginTop: 24, paddingTop: 12, borderTop: "1px solid #e0dcd0" }}>
                       <button
                         onClick={openCompose}
-                        style={{ padding: "5px 16px", background: "linear-gradient(180deg,#f8f8f0,#e8e4d4)", border: "1px solid #aca899", borderRadius: 2, cursor: "pointer", fontSize: 12, fontFamily: "Tahoma, sans-serif" }}
+                        style={{ padding: isMobile ? "8px 20px" : "5px 16px", background: "linear-gradient(180deg,#f8f8f0,#e8e4d4)", border: "1px solid #aca899", borderRadius: 2, cursor: "pointer", fontSize: 12, fontFamily: "Tahoma, sans-serif" }}
                       >
                         ✉ Reply to Irham
                       </button>
@@ -274,7 +334,7 @@ export default function OutlookExpressWindow() {
         <span>{activeFolder === "inbox" ? `${messages.length} message(s), ${unreadCount("inbox")} unread` : "0 message(s)"}</span>
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
           <img src="/xp/icons/Windows XP Icons/Outlook Express.png" alt="" style={{ width: 14, height: 14, opacity: 0.7 }} />
-          <span>Working Online</span>
+          {!isMobile && <span>Working Online</span>}
         </div>
       </div>
     </div>
@@ -282,14 +342,14 @@ export default function OutlookExpressWindow() {
 }
 
 /* ─── Compose View ─────────────────────────────────────────────────────── */
-function ComposeView({ to, subject, body, onToChange, onSubjectChange, onBodyChange, onSend, onCancel, sendStatus }) {
+function ComposeView({ to, subject, body, onToChange, onSubjectChange, onBodyChange, onSend, onCancel, sendStatus, isMobile }) {
   return (
     <div style={{ flex: 1, display: "flex", flexDirection: "column", background: "white", overflow: "hidden" }}>
       {/* Compose Toolbar */}
       <div style={{ display: "flex", alignItems: "center", gap: "2px", padding: "2px 6px", background: "#f1efe2", borderBottom: "1px solid #aca899", flexShrink: 0 }}>
-        <ToolBtn icon="/xp/icons/Windows XP Icons/OE Send.png" label="Send" onClick={onSend} />
+        <ToolBtn icon="/xp/icons/Windows XP Icons/OE Send.png" label="Send" onClick={onSend} isMobile={isMobile} />
         <div style={{ width: 1, height: 28, background: "#aca899", margin: "0 2px" }} />
-        <ToolBtn icon="/xp/icons/Windows XP Icons/OE Create Mail.png" label="Cancel" onClick={onCancel} />
+        <ToolBtn icon="/xp/icons/Windows XP Icons/OE Create Mail.png" label="Cancel" onClick={onCancel} isMobile={isMobile} />
       </div>
 
       {/* Fields */}
@@ -305,7 +365,7 @@ function ComposeView({ to, subject, body, onToChange, onSubjectChange, onBodyCha
           value={body}
           onChange={(e) => onBodyChange(e.target.value)}
           placeholder="Write your message here..."
-          style={{ width: "100%", height: "100%", border: "none", outline: "none", resize: "none", padding: "10px 12px", fontSize: 13, fontFamily: "Tahoma, Arial, sans-serif", lineHeight: 1.7, background: "white", boxSizing: "border-box", color: "#1a1a1a" }}
+          style={{ width: "100%", height: "100%", border: "none", outline: "none", resize: "none", padding: "10px 12px", fontSize: isMobile ? 14 : 13, fontFamily: "Tahoma, Arial, sans-serif", lineHeight: 1.7, background: "white", boxSizing: "border-box", color: "#1a1a1a" }}
         />
       </div>
 
@@ -340,18 +400,18 @@ function FieldRow({ label, value, onChange, readOnly }) {
 }
 
 /* ─── ToolBtn ─────────────────────────────────────────────────────────── */
-function ToolBtn({ icon, label, disabled, onClick }) {
+function ToolBtn({ icon, label, disabled, onClick, isMobile }) {
   return (
     <button
       title={label}
       onClick={onClick}
       disabled={disabled}
-      style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1px", padding: "2px 6px", background: "transparent", border: "1px solid transparent", borderRadius: "2px", cursor: disabled ? "default" : "pointer", opacity: disabled ? 0.4 : 1, minWidth: "36px", fontSize: "10px", color: "#333", fontFamily: "Tahoma, sans-serif" }}
+      style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1px", padding: "2px 4px", background: "transparent", border: "1px solid transparent", borderRadius: "2px", cursor: disabled ? "default" : "pointer", opacity: disabled ? 0.4 : 1, minWidth: isMobile ? "28px" : "36px", fontSize: "10px", color: "#333", fontFamily: "Tahoma, sans-serif", flexShrink: 0 }}
       onMouseEnter={(e) => { if (!disabled) e.currentTarget.style.border = "1px solid #aca899"; }}
       onMouseLeave={(e) => { e.currentTarget.style.border = "1px solid transparent"; }}
     >
       <img src={icon} alt={label} style={{ width: 20, height: 20 }} />
-      <span>{label}</span>
+      {!isMobile && <span>{label}</span>}
     </button>
   );
 }

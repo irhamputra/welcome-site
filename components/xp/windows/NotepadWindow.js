@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useWindowManager } from "../../../context/windowManager";
 
 export default function NotepadWindow({ id = "notepad" }) {
@@ -9,7 +9,15 @@ export default function NotepadWindow({ id = "notepad" }) {
   const [statusBar, setStatusBar] = useState(true);
   const [fontDialog, setFontDialog] = useState(false);
   const [fontSize, setFontSize] = useState(13);
+  const [isMobile, setIsMobile] = useState(false);
   const textareaRef = useRef(null);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const lineCount = text.split("\n").length;
   const charCount = text.length;
@@ -118,14 +126,14 @@ export default function NotepadWindow({ id = "notepad" }) {
     >
       {/* Menu Bar */}
       <div
-        style={{ display: "flex", borderBottom: "1px solid #aca899", background: "#f1efe2", padding: "1px 4px", gap: 2, flexShrink: 0 }}
+        style={{ display: "flex", borderBottom: "1px solid #aca899", background: "#f1efe2", padding: "1px 4px", gap: 2, flexShrink: 0, overflowX: "auto" }}
         onClick={e => e.stopPropagation()}
       >
         {Object.keys(menuItems).map(menu => (
-          <div key={menu} style={{ position: "relative" }}>
+          <div key={menu} style={{ position: "relative", flexShrink: 0 }}>
             <div
               onClick={() => setActiveMenu(activeMenu === menu ? null : menu)}
-              style={{ padding: "2px 6px", cursor: "default", background: activeMenu === menu ? "#316ac5" : "transparent", color: activeMenu === menu ? "white" : "black", borderRadius: 2 }}
+              style={{ padding: "2px 6px", cursor: "default", background: activeMenu === menu ? "#316ac5" : "transparent", color: activeMenu === menu ? "white" : "black", borderRadius: 2, whiteSpace: "nowrap" }}
             >
               {menu}
             </div>
@@ -162,8 +170,8 @@ export default function NotepadWindow({ id = "notepad" }) {
         style={{
           flex: 1,
           border: "none", outline: "none", resize: "none",
-          padding: "4px 6px",
-          fontSize,
+          padding: isMobile ? "6px 8px" : "4px 6px",
+          fontSize: isMobile ? Math.max(fontSize, 14) : fontSize,
           fontFamily: "Courier New, Courier, monospace",
           lineHeight: 1.5,
           whiteSpace: wordWrap ? "pre-wrap" : "pre",
@@ -179,7 +187,7 @@ export default function NotepadWindow({ id = "notepad" }) {
         <div style={{ display: "flex", gap: 16, padding: "1px 6px", background: "#f1efe2", borderTop: "1px solid #aca899", fontSize: 11, color: "#333", flexShrink: 0, height: 18 }}>
           <span>Ln {caret.ln}, Col {caret.col}</span>
           <span>{charCount} chars</span>
-          <span>{lineCount} lines</span>
+          {!isMobile && <span>{lineCount} lines</span>}
         </div>
       )}
 

@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 
 const FONTS = ["Arial", "Times New Roman", "Courier New", "Tahoma", "Verdana", "Georgia"];
 const FONT_SIZES = [8, 9, 10, 11, 12, 14, 16, 18, 20, 24, 28, 36, 48, 72];
@@ -8,7 +8,14 @@ export default function WordPadWindow() {
   const [activeMenu, setActiveMenu] = useState(null);
   const [font, setFont] = useState("Arial");
   const [fontSize, setFontSize] = useState(12);
-  const [fontSizeInput, setFontSizeInput] = useState("12");
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const exec = useCallback((cmd, value = null) => {
     editorRef.current?.focus();
@@ -26,17 +33,10 @@ export default function WordPadWindow() {
 
   const handleFontSizeChange = (s) => {
     setFontSize(s);
-    setFontSizeInput(String(s));
-    // execCommand fontSize uses 1-7 scale; use styleWithCSS instead
     exec("styleWithCSS", true);
     exec("fontSize", 4);
-    // Override the size with inline style after
-    const sel = window.getSelection();
-    if (sel && sel.rangeCount > 0) {
-      const range = sel.getRangeAt(0);
-      const spans = editorRef.current?.querySelectorAll("font[size]");
-      spans?.forEach(span => { span.removeAttribute("size"); span.style.fontSize = s + "px"; });
-    }
+    const spans = editorRef.current?.querySelectorAll("font[size]");
+    spans?.forEach(span => { span.removeAttribute("size"); span.style.fontSize = s + "px"; });
   };
 
   const handleSave = () => {
@@ -132,14 +132,14 @@ export default function WordPadWindow() {
     >
       {/* Menu Bar */}
       <div
-        style={{ display: "flex", borderBottom: "1px solid #aca899", background: "#f1efe2", padding: "1px 4px", gap: 2, flexShrink: 0 }}
+        style={{ display: "flex", borderBottom: "1px solid #aca899", background: "#f1efe2", padding: "1px 4px", gap: 2, flexShrink: 0, overflowX: "auto" }}
         onClick={e => e.stopPropagation()}
       >
         {Object.keys(menuItems).map(menu => (
-          <div key={menu} style={{ position: "relative" }}>
+          <div key={menu} style={{ position: "relative", flexShrink: 0 }}>
             <div
               onClick={() => setActiveMenu(activeMenu === menu ? null : menu)}
-              style={{ padding: "2px 6px", cursor: "default", background: activeMenu === menu ? "#316ac5" : "transparent", color: activeMenu === menu ? "white" : "black", borderRadius: 2 }}
+              style={{ padding: "2px 6px", cursor: "default", background: activeMenu === menu ? "#316ac5" : "transparent", color: activeMenu === menu ? "white" : "black", borderRadius: 2, whiteSpace: "nowrap" }}
             >
               {menu}
             </div>
@@ -166,26 +166,26 @@ export default function WordPadWindow() {
       </div>
 
       {/* Standard Toolbar */}
-      <div style={{ display: "flex", alignItems: "center", gap: 1, padding: "2px 6px", borderBottom: "1px solid #aca899", background: "#f1efe2", flexShrink: 0 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 1, padding: "2px 6px", borderBottom: "1px solid #aca899", background: "#f1efe2", flexShrink: 0, overflowX: "auto" }}>
         <ToolBtn label="New" action={() => { if (editorRef.current) editorRef.current.innerHTML = ""; }}>🗋</ToolBtn>
         <ToolBtn label="Save" action={handleSave}>💾</ToolBtn>
         <ToolBtn label="Print" action={handlePrint}>🖨</ToolBtn>
-        <div style={{ width: 1, height: 20, background: "#aca899", margin: "0 3px" }} />
+        <div style={{ width: 1, height: 20, background: "#aca899", margin: "0 3px", flexShrink: 0 }} />
         <ToolBtn label="Cut" action={() => exec("cut")}>✂</ToolBtn>
         <ToolBtn label="Copy" action={() => exec("copy")}>📋</ToolBtn>
         <ToolBtn label="Paste" action={() => exec("paste")}>📌</ToolBtn>
-        <div style={{ width: 1, height: 20, background: "#aca899", margin: "0 3px" }} />
+        <div style={{ width: 1, height: 20, background: "#aca899", margin: "0 3px", flexShrink: 0 }} />
         <ToolBtn label="Undo" action={() => exec("undo")}>↩</ToolBtn>
         <ToolBtn label="Redo" action={() => exec("redo")}>↪</ToolBtn>
       </div>
 
       {/* Format Toolbar */}
-      <div style={{ display: "flex", alignItems: "center", gap: 2, padding: "2px 6px", borderBottom: "1px solid #aca899", background: "#f1efe2", flexShrink: 0 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 2, padding: "2px 6px", borderBottom: "1px solid #aca899", background: "#f1efe2", flexShrink: 0, flexWrap: isMobile ? "wrap" : "nowrap", overflowX: isMobile ? "hidden" : "auto" }}>
         {/* Font picker */}
         <select
           value={font}
           onChange={e => handleFontChange(e.target.value)}
-          style={{ height: 20, fontSize: 11, fontFamily: font, border: "1px solid #7f9db9", padding: "0 2px", width: 110 }}
+          style={{ height: 20, fontSize: 11, fontFamily: font, border: "1px solid #7f9db9", padding: "0 2px", width: isMobile ? 100 : 110, flexShrink: 0 }}
         >
           {FONTS.map(f => <option key={f} value={f} style={{ fontFamily: f }}>{f}</option>)}
         </select>
@@ -193,29 +193,31 @@ export default function WordPadWindow() {
         <select
           value={fontSize}
           onChange={e => handleFontSizeChange(Number(e.target.value))}
-          style={{ height: 20, fontSize: 11, border: "1px solid #7f9db9", padding: "0 2px", width: 46 }}
+          style={{ height: 20, fontSize: 11, border: "1px solid #7f9db9", padding: "0 2px", width: 46, flexShrink: 0 }}
         >
           {FONT_SIZES.map(s => <option key={s} value={s}>{s}</option>)}
         </select>
-        <div style={{ width: 1, height: 20, background: "#aca899", margin: "0 2px" }} />
+        <div style={{ width: 1, height: 20, background: "#aca899", margin: "0 2px", flexShrink: 0 }} />
         <ToolBtn cmd="bold" label="Bold"><b>B</b></ToolBtn>
         <ToolBtn cmd="italic" label="Italic"><i>I</i></ToolBtn>
         <ToolBtn cmd="underline" label="Underline"><u>U</u></ToolBtn>
-        <div style={{ width: 1, height: 20, background: "#aca899", margin: "0 2px" }} />
+        <div style={{ width: 1, height: 20, background: "#aca899", margin: "0 2px", flexShrink: 0 }} />
         <ToolBtn cmd="justifyLeft" label="Align Left">≡</ToolBtn>
         <ToolBtn cmd="justifyCenter" label="Center">≡</ToolBtn>
         <ToolBtn cmd="justifyRight" label="Align Right">≡</ToolBtn>
-        <div style={{ width: 1, height: 20, background: "#aca899", margin: "0 2px" }} />
+        <div style={{ width: 1, height: 20, background: "#aca899", margin: "0 2px", flexShrink: 0 }} />
         <ToolBtn cmd="insertUnorderedList" label="Bullets">•</ToolBtn>
       </div>
 
-      {/* Ruler */}
-      <div style={{ height: 16, background: "#f8f6f0", borderBottom: "1px solid #aca899", flexShrink: 0, overflow: "hidden", position: "relative" }}>
-        <div style={{ position: "absolute", left: 0, right: 0, top: 7, height: 1, background: "#aca899" }} />
-        {Array.from({ length: 20 }, (_, i) => (
-          <div key={i} style={{ position: "absolute", left: 32 + i * 24, top: i % 2 === 0 ? 4 : 8, width: 1, height: i % 2 === 0 ? 8 : 4, background: "#666" }} />
-        ))}
-      </div>
+      {/* Ruler — hidden on mobile */}
+      {!isMobile && (
+        <div style={{ height: 16, background: "#f8f6f0", borderBottom: "1px solid #aca899", flexShrink: 0, overflow: "hidden", position: "relative" }}>
+          <div style={{ position: "absolute", left: 0, right: 0, top: 7, height: 1, background: "#aca899" }} />
+          {Array.from({ length: 20 }, (_, i) => (
+            <div key={i} style={{ position: "absolute", left: 32 + i * 24, top: i % 2 === 0 ? 4 : 8, width: 1, height: i % 2 === 0 ? 8 : 4, background: "#666" }} />
+          ))}
+        </div>
+      )}
 
       {/* Editor */}
       <div style={{ flex: 1, background: "white", overflow: "auto", padding: "0 8px" }}>
@@ -224,10 +226,10 @@ export default function WordPadWindow() {
           contentEditable
           suppressContentEditableWarning
           style={{
-            minHeight: "100%", padding: "12px 40px",
+            minHeight: "100%", padding: isMobile ? "8px 8px" : "12px 40px",
             outline: "none", fontSize: fontSize, fontFamily: font,
             lineHeight: 1.6, color: "#000",
-            boxShadow: "0 0 8px rgba(0,0,0,0.1)",
+            boxShadow: isMobile ? "none" : "0 0 8px rgba(0,0,0,0.1)",
             background: "white",
           }}
           onKeyDown={e => {
