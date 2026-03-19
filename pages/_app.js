@@ -1,6 +1,7 @@
 import "xp.css/dist/XP.css";
 import "../styles/globals.css";
 import Head from "next/head";
+import { Analytics } from "@vercel/analytics/next";
 import { WindowManagerProvider } from "../context/windowManager";
 
 export default function MyApp({ Component, pageProps }) {
@@ -13,6 +14,7 @@ export default function MyApp({ Component, pageProps }) {
         <link rel="icon" href={pageProps.user?.avatar_url || "https://avatars.githubusercontent.com/irhamputra"} />
       </Head>
       <Component {...pageProps} />
+      <Analytics />
     </WindowManagerProvider>
   );
 }

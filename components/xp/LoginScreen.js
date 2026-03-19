@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 export default function LoginScreen({ user }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-
   const handleLogin = () => {
     setLoading(true);
     setTimeout(() => router.push("/desktop"), 2200);
