@@ -17,6 +17,7 @@ const WINDOW_CONFIGS = {
   msn: { title: "irham - MSN Messenger", defaultWidth: 360, defaultHeight: 420 },
   minesweeper: { title: "Minesweeper", defaultWidth: 214, defaultHeight: 302 },
   solitaire: { title: "Solitaire", defaultWidth: 514, defaultHeight: 540 },
+  mymusic: { title: "My Music", defaultWidth: 680, defaultHeight: 460 },
 };
 
 function getDefaultPosition(id, index) {
