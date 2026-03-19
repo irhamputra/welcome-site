@@ -20,10 +20,9 @@ import MinesweeperWindow from "./windows/MinesweeperWindow";
 import BSODScreen from "./BSODScreen";
 import BalloonNotification from "./BalloonNotification";
 
-const DESKTOP_ICONS = [
+const STATIC_ICONS = [
   { id: "mycomputer", icon: "/xp/icons/Windows XP Icons/My Computer.png", label: "My Computer" },
   { id: "repos", icon: "/xp/icons/Windows XP Icons/My Documents.png", label: "My Documents" },
-  { id: "recyclebin", icon: "/xp/icons/Windows XP Icons/Recycle Bin (empty).png", label: "Recycle Bin" },
   { id: "ie", icon: "/xp/icons/Windows XP Icons/Internet Explorer 6.png", label: "Internet Explorer" },
   { id: "outlook", icon: "/xp/icons/Windows XP Icons/Outlook Express.png", label: "Outlook Express" },
   { id: "paint", icon: "/xp/icons/Windows XP Icons/Paint.png", label: "Paint" },
@@ -34,7 +33,17 @@ const DESKTOP_ICONS = [
 const KONAMI = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
 
 export default function Desktop({ user, repos }) {
-  const { openWindow, closeStartMenu } = useWindowManager();
+  const { openWindow, closeStartMenu, recyclebin } = useWindowManager();
+  const recycleBinIcon = recyclebin.length > 0
+    ? "/xp/icons/Windows XP Icons/Recycle Bin (full).png"
+    : "/xp/icons/Windows XP Icons/Recycle Bin (empty).png";
+
+  const DESKTOP_ICONS = [
+    ...STATIC_ICONS.slice(0, 2),
+    { id: "recyclebin", icon: recycleBinIcon, label: "Recycle Bin" },
+    ...STATIC_ICONS.slice(2),
+  ];
+
   const [showBSOD, setShowBSOD] = useState(false);
   const [showBalloon, setShowBalloon] = useState(false);
   const konamiRef = useRef([]);

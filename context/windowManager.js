@@ -28,6 +28,7 @@ const initialState = {
   windowOrder: [],
   nextZIndex: 100,
   startMenuOpen: false,
+  recyclebin: [],
 };
 
 function windowReducer(state, action) {
@@ -163,6 +164,20 @@ function windowReducer(state, action) {
       return { ...state, windows: newWindows };
     }
 
+    case "MOVE_TO_BIN": {
+      const { item } = action;
+      return { ...state, recyclebin: [...state.recyclebin, { ...item, deletedAt: new Date().toISOString() }] };
+    }
+
+    case "RESTORE_FROM_BIN": {
+      const { id } = action;
+      return { ...state, recyclebin: state.recyclebin.filter((i) => i.id !== id) };
+    }
+
+    case "EMPTY_BIN": {
+      return { ...state, recyclebin: [] };
+    }
+
     case "TOGGLE_START_MENU": {
       return { ...state, startMenuOpen: !state.startMenuOpen };
     }
@@ -190,6 +205,9 @@ export function WindowManagerProvider({ children }) {
   const setWindowTitle = useCallback((id, title) => dispatch({ type: "SET_WINDOW_TITLE", id, title }), []);
   const toggleStartMenu = useCallback(() => dispatch({ type: "TOGGLE_START_MENU" }), []);
   const closeStartMenu = useCallback(() => dispatch({ type: "CLOSE_START_MENU" }), []);
+  const moveToBin = useCallback((item) => dispatch({ type: "MOVE_TO_BIN", item }), []);
+  const restoreFromBin = useCallback((id) => dispatch({ type: "RESTORE_FROM_BIN", id }), []);
+  const emptyBin = useCallback(() => dispatch({ type: "EMPTY_BIN" }), []);
 
   const value = {
     ...state,
@@ -204,6 +222,9 @@ export function WindowManagerProvider({ children }) {
     setWindowTitle,
     toggleStartMenu,
     closeStartMenu,
+    moveToBin,
+    restoreFromBin,
+    emptyBin,
   };
 
   return (
