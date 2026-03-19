@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useWindowManager } from "../../context/windowManager";
 
-export default function Window({ id, children }) {
+export default function Window({ id, children, disableFullscreen }) {
   const {
     windows,
     closeWindow,
@@ -84,7 +84,7 @@ export default function Window({ id, children }) {
     e.preventDefault();
   };
 
-  const isFullscreen = isMobile || win.isMaximized;
+  const isFullscreen = !disableFullscreen && (isMobile || win.isMaximized);
 
   const style = isFullscreen
     ? {
@@ -116,7 +116,7 @@ export default function Window({ id, children }) {
         <div className="title-bar-text" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0, flex: 1 }}>{win.title}</div>
         <div className="title-bar-controls">
           <button aria-label="Minimize" onClick={() => minimizeWindow(id)} />
-          <button aria-label="Maximize" onClick={() => maximizeWindow(id)} />
+          {!disableFullscreen && <button aria-label="Maximize" onClick={() => maximizeWindow(id)} />}
           <button aria-label="Close" onClick={() => closeWindow(id)} />
         </div>
       </div>

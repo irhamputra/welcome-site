@@ -86,6 +86,8 @@ export default function StartMenu({ user }) {
           <MenuItem icon={I("Calculator")} label="Calculator" onClick={() => open("calculator")} />
           <MenuItem icon={I("Paint")} label="Paint" onClick={() => open("paint")} />
           <MenuItem icon={I("Wordpad")} label="WordPad" onClick={() => open("wordpad")} />
+          <MenuItem icon={I("MSN Messenger")} label="MSN Messenger" onClick={() => open("msn")} />
+          <MenuItem icon={I("Minesweeper")} label="Minesweeper" onClick={() => open("minesweeper")} />
 
           <div style={{ height: 1, background: "#d0cdc8", margin: "4px 8px" }} />
 

@@ -1,3 +1,4 @@
+import { useEffect, useState, useRef } from "react";
 import { useWindowManager } from "../../context/windowManager";
 import DesktopIcon from "./DesktopIcon";
 import Taskbar from "./Taskbar";
@@ -14,6 +15,10 @@ import NotepadWindow from "./windows/NotepadWindow";
 import WordPadWindow from "./windows/WordPadWindow";
 import CalculatorWindow from "./windows/CalculatorWindow";
 import RunWindow from "./windows/RunWindow";
+import MSNMessengerWindow from "./windows/MSNMessengerWindow";
+import MinesweeperWindow from "./windows/MinesweeperWindow";
+import BSODScreen from "./BSODScreen";
+import BalloonNotification from "./BalloonNotification";
 
 const DESKTOP_ICONS = [
   { id: "mycomputer", icon: "/xp/icons/Windows XP Icons/My Computer.png", label: "My Computer" },
@@ -22,13 +27,70 @@ const DESKTOP_ICONS = [
   { id: "ie", icon: "/xp/icons/Windows XP Icons/Internet Explorer 6.png", label: "Internet Explorer" },
   { id: "outlook", icon: "/xp/icons/Windows XP Icons/Outlook Express.png", label: "Outlook Express" },
   { id: "paint", icon: "/xp/icons/Windows XP Icons/Paint.png", label: "Paint" },
+  { id: "minesweeper", icon: "/xp/icons/Windows XP Icons/Minesweeper.png", label: "Minesweeper" },
 ];
+
+// Konami code sequence
+const KONAMI = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
 
 export default function Desktop({ user, repos }) {
   const { openWindow, closeStartMenu } = useWindowManager();
+  const [showBSOD, setShowBSOD] = useState(false);
+  const [showBalloon, setShowBalloon] = useState(false);
+  const konamiRef = useRef([]);
+
+  // Show balloon after 2s on mount
+  useEffect(() => {
+    const timer = setTimeout(() => setShowBalloon(true), 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Auto-dismiss balloon after 8s
+  useEffect(() => {
+    if (!showBalloon) return;
+    const timer = setTimeout(() => setShowBalloon(false), 8000);
+    return () => clearTimeout(timer);
+  }, [showBalloon]);
+
+  // Konami code listener for BSOD
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (showBSOD) {
+        setShowBSOD(false);
+        return;
+      }
+      konamiRef.current = [...konamiRef.current, e.key].slice(-KONAMI.length);
+      if (konamiRef.current.join(",") === KONAMI.join(",")) {
+        setShowBSOD(true);
+        konamiRef.current = [];
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [showBSOD]);
+
+  const handleBalloonAccept = () => {
+    setShowBalloon(false);
+    openWindow("msn");
+  };
+
+  const handleBalloonDecline = () => {
+    setShowBalloon(false);
+  };
 
   return (
     <div className="xp-desktop" onClick={() => closeStartMenu()}>
+      {showBSOD && (
+        <BSODScreen onDismiss={() => setShowBSOD(false)} />
+      )}
+
+      {showBalloon && (
+        <BalloonNotification
+          onAccept={handleBalloonAccept}
+          onDecline={handleBalloonDecline}
+        />
+      )}
+
       <div
         className="xp-desktop-icons"
         onClick={(e) => {
@@ -82,6 +144,12 @@ export default function Desktop({ user, repos }) {
       </Window>
       <Window id="run">
         <RunWindow />
+      </Window>
+      <Window id="msn">
+        <MSNMessengerWindow user={user} />
+      </Window>
+      <Window id="minesweeper" disableFullscreen>
+        <MinesweeperWindow />
       </Window>
 
       {/* Start Menu */}

@@ -14,6 +14,8 @@ const WINDOW_CONFIGS = {
   wordpad: { title: "Document - WordPad", defaultWidth: 680, defaultHeight: 500 },
   calculator: { title: "Calculator", defaultWidth: 220, defaultHeight: 280 },
   run: { title: "Run", defaultWidth: 400, defaultHeight: 210 },
+  msn: { title: "irham - MSN Messenger", defaultWidth: 360, defaultHeight: 420 },
+  minesweeper: { title: "Minesweeper", defaultWidth: 214, defaultHeight: 306 },
 };
 
 function getDefaultPosition(id, index) {
@@ -152,6 +154,15 @@ function windowReducer(state, action) {
       return { ...state, windows: newWindows };
     }
 
+    case "UPDATE_SIZE": {
+      const { id, width, height } = action;
+      const newWindows = { ...state.windows };
+      if (newWindows[id]) {
+        newWindows[id] = { ...newWindows[id], width, height };
+      }
+      return { ...state, windows: newWindows };
+    }
+
     case "TOGGLE_START_MENU": {
       return { ...state, startMenuOpen: !state.startMenuOpen };
     }
@@ -175,6 +186,7 @@ export function WindowManagerProvider({ children }) {
   const maximizeWindow = useCallback((id) => dispatch({ type: "MAXIMIZE_WINDOW", id }), []);
   const focusWindow = useCallback((id) => dispatch({ type: "FOCUS_WINDOW", id }), []);
   const updatePosition = useCallback((id, position) => dispatch({ type: "UPDATE_POSITION", id, position }), []);
+  const updateSize = useCallback((id, width, height) => dispatch({ type: "UPDATE_SIZE", id, width, height }), []);
   const setWindowTitle = useCallback((id, title) => dispatch({ type: "SET_WINDOW_TITLE", id, title }), []);
   const toggleStartMenu = useCallback(() => dispatch({ type: "TOGGLE_START_MENU" }), []);
   const closeStartMenu = useCallback(() => dispatch({ type: "CLOSE_START_MENU" }), []);
@@ -188,6 +200,7 @@ export function WindowManagerProvider({ children }) {
     maximizeWindow,
     focusWindow,
     updatePosition,
+    updateSize,
     setWindowTitle,
     toggleStartMenu,
     closeStartMenu,

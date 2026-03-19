@@ -1,21 +1,23 @@
 import { useEffect, useState } from "react";
+import { useWindowManager } from "../../context/windowManager";
 
-function TrayIcon({ src, title }) {
+function TrayIcon({ src, title, onClick }) {
   return (
     <img
       src={src}
       alt={title}
       title={title}
-      style={{ width: 16, height: 16, cursor: "default", flexShrink: 0 }}
+      onClick={onClick}
+      style={{ width: 16, height: 16, cursor: onClick ? "pointer" : "default", flexShrink: 0 }}
     />
   );
 }
-import { useWindowManager } from "../../context/windowManager";
 
 export default function Taskbar() {
   const {
     windows,
     windowOrder,
+    openWindow,
     toggleStartMenu,
     focusWindow,
     minimizeWindow,
@@ -52,6 +54,8 @@ export default function Taskbar() {
     wordpad: "/xp/icons/Windows XP Icons/Wordpad.png",
     calculator: "/xp/icons/Windows XP Icons/Calculator.png",
     run: "/xp/icons/Windows XP Icons/Run.png",
+    msn: "/xp/icons/Windows XP Icons/MSN Messenger.png",
+    minesweeper: "/xp/icons/Windows XP Icons/Minesweeper.png",
   };
 
   const openWindows = windowOrder
@@ -98,7 +102,7 @@ export default function Taskbar() {
         <TrayIcon src="/xp/icons/Windows XP Icons/Security Center.png" title="Security Center" />
         <TrayIcon src="/xp/icons/Windows XP Icons/Volume.png" title="Volume" />
         <TrayIcon src="/xp/icons/Windows XP Icons/Network Connection.png" title="Network Connection" />
-        <TrayIcon src="/xp/icons/Windows XP Icons/MSN Messenger.png" title="MSN Messenger" />
+        <TrayIcon src="/xp/icons/Windows XP Icons/MSN Messenger.png" title="MSN Messenger" onClick={() => openWindow("msn")} />
         <div style={{ width: 1, height: 16, background: "rgba(255,255,255,0.2)", margin: "0 2px" }} />
         <span style={{ whiteSpace: "nowrap", fontSize: 11 }}>{time}</span>
       </div>
